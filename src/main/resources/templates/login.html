@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head lang="en">
+    <meta content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!--
+        th:inline，文本内联，连接。
+        利用 thymeleaf消息表达式： #{...}访问属性文件的数据，主要用于国际化。
+        利用 thymeleaf超链接表达式： @{...}访问静态资源或动态资源。（th:src='@{...}'、th:href='@{...}'、th:action='@{...}'）
+    -->
+    <title>安全登录</title>
+</head>
+
+<!-- 获取项目根目录路径，及 thymeleaf 对 script 的声明方式  -->
+<script type="text/javascript" th:inline="javascript">
+
+    <!-- 并且以 js 声明的变量，也只能用于 js中，不能放在 thymeleaf 标签中 -->
+    var base = /*[[@{/}]]*/'';
+    console.log("base: "+base);
+
+    /*<![CDATA[*/
+    var contexPath = /*[[@{/}]]*/ '';
+    /*]]>*/
+    console.log("base1: "+contexPath);
+
+</script>
+
+<body>
+    <!--/* thymeleaf注释语法，html 看不到，并且 thymeleaf 不会执行。 */-->
+
+    <!--/*@thymesVar id="error" type="java"*/-->
+    <div th:if="${error}">用户名或密码错！</div>
+    
+    <!--/*@thymesVar id="logout" type="java"*/-->
+    <div th:if="${logout}">已退出登录！</div>
+
+    <form th:action="@{/parselogin}" method="post">
+        <div>
+            <label>用户名：<input type="text" name="username" /></label>
+        </div>
+        <div>
+            <label>密码：<input type="password" name="password" /></label>
+        </div>
+        <div><input type="submit" value="登录"></div>
+    </form>
+
+    <!--/*-->
+        <div>thymeleaf 未运行时可以在 html 中看到，运行后就消失! </div>
+    <!--*/-->
+
+    <!--/*/
+        <div>运行后才会看到信息！</div>
+    /*/-->
+
+    <button th:onclick="'javascript:goto()'">以根方式连接的网页</button>
+    <div th:onclick="'javascript:gohtml()'">以根方式连接的网页</div>
+</body>
+<script th:inline="javascript">
+
+    function goto() {
+        console.log("mark");
+        location.href = base+'do/index';
+    }
+
+    function gohtml() {
+        location.href = base+'html/index';
+    }
+</script>
+</html>

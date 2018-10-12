@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!-- 必须加上这一句，否则 th 不可用 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!--
+        引用静态资源文件，比如CSS和JS文件，语法格式为“@{}”，如@{/js/blog/blog.js}会引入/static目录下的/js/blog/blog.js文件
+        如果是要从根目录开始找的资源，则路径就必须以 / 根开关，否则就会从当前目录下开始访问。
+    -->
+    <title>Title</title>
+</head>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[@{/}]]*/'';
+</script>
+<body>
+<!--/*
+    Thymeleaf 主要以属性的方式加入到html标签中，浏览器在解析html时，当检查到没有属性的时候会忽略，所以 Thymeleaf的模板可以通
+    过浏览器直接打开展现，这样非常有利于前后端的分离。
+    springboot 不推荐使用 jsp，首先是其本身对 jsp 的支持就不是很理想，不是很兼容。再者 jsp页面并不能很好的实现前后端分离，
+    主要是不利用前端进行独立显示，和开发。
+
+    th:text 使用 |xxx| 拼接字符串，否则会解析失败。并且如果当传递有数据时，就显示数据，则后面的 welcome 就不显示了。
+    即原有的值只是为了给前端开发时做展示用的.这样的话很好的做到了前后端分离.
+
+    |…|中只能包含变量表达式${…}，不能包含其他常量、条件表达式等。
+
+    #{...} : Message 表达式，显示为中文编码
+    ${}：变量表达式
+    *{} ：选择变量表达式
+    @{}: 链接 URL 表达式
+*/-->
+<h1 th:inline="text">[[${#httpServletRequest.remoteUser}]]，welcome</h1>
+<h1 th:inline="text">当前登录的用户是： [[${#httpServletRequest.remoteUser}]]!</h1>
+<p>
+    <!-- 此处不能使用 js 定义的根目录，只能使用 / 路径了 -->
+    <a th:href="@{/html/index.html}">去 Html 的页面</a>
+
+    <!-- /login 为 security的路径 -->
+    <a th:href="@{/login}">去登录</a>
+</p>
+<div>
+    <p th:onclick="'javascript:gohtml()'">去内部 html页面</p>
+</div>
+
+<div>标记1</div>
+
+<script>
+    function gohtml() {
+        location.href = basePath +"html/index";
+    }
+</script>
+<!--/*
+    thymeleaf常用基础知识点：
+
+        1、在html页面中引入thymeleaf命名空间，即<html xmlns:th=http://www.thymeleaf.org></html>，此时在html模板文件中动态的属性使用th:命名空间修饰
+
+        2、引用静态资源文件，比如CSS和JS文件，语法格式为“@{}”，如@{/js/blog/blog.js}会引入/static目录下的/js/blog/blog.js文件
+
+        3、访问spring-mvc中model的属性，语法格式为“${}”，如${user.id}可以获取model里的user对象的id属性
+
+        4、循环，在html的标签中，加入th:each=“value:${list}”形式的属性，如<span th:each=”user:${users}”></span>可以迭代users的数据
+
+        5、判断，在html标签中，加入 th:if=”表达式” 可以根据条件显示 html元素：
+        <span th:if="${not #lists.isEmpty(blog.publishTime)}">
+        <span id="publishtime" th:text="${#dates.format(blog.publishTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </span>
+        以上代码表示若blog.publishTime时间不为空，则显示时间
+
+
+        6、时间的格式化，
+        ${#dates.format(blog.publishTime,'yyyy-MM-dd HH:mm:ss')}
+        表示将时间格式化为”yyyy-MM-dd HH:mm:ss”格式化写法与Java格式化Date的写法是一致的。
+
+
+        7、字符串拼接，有两种形式
+        比如拼接这样一个URL:/blog/delete/{blogId}
+        第一种：th:href="'/blog/delete/' + ${blog.id }"
+        第二种：th:href="${'/blog/delete/' + blog.id }"
+*/-->
+</body>
+</html>
