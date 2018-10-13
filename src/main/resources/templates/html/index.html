@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- 必须加上这一句，否则 th 不可用 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head lang="en">
+    <!--
+        Edge 模式告诉 IE 以最高级模式渲染文档，也就是任何 IE 版本都以当前版本所支持的最高级标准模式渲染，避免版本升级造成的影响。
+        简单的说，就是什么版本IE 就用什么版本的标准模式渲染，或强制 IE 使用 Chrome Frame 渲染
+    -->
+    <meta content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--
+        viewport，是用于在移动设备上进行网页的重构或开发，是设置了当前页面在移动端的显示格式。 content属性值 :
+
+        width：            可视区域的宽度，值可为数字或 关键词device-width（即设备宽度）
+        height：           同width
+        intial-scale：     页面首次被显示是可视区域的缩放级别，取值1.0则页面按实际尺寸显示，无任何缩放
+        maximum-scale=1.0, minimum-scale=1.0;  可视区域的缩放级别，
+        maximum-scale：     用户可将页面放大的程序，1.0将禁止用户放大到实际尺寸之上。
+        user-scalable：     是否可对页面进行缩放，no 禁止缩放
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <title>Title</title>
+</head>
+<body>
+<!--
+    Thymeleaf 默认的模板配置路径为：src/main/resources/templates，所以在其内部的文件夹内再使用该模板，则就需要加上下面的注解。
+
+-->
+<!--/*@thymesVar id="test" type="java"*/-->
+<h1 th:text="${test}"></h1>
+<h1>html 文件夹</h1>
+<p>
+    <!--
+        /login，及 ?error，?logout 都是 security的默认路径，在不使用自定义的路径时都可用，
+        并且退出登录时，也必须使用 form 表单提交，否则不会生效。
+
+        <a th:href="|@{/login?logout}|">退出系统的登录</a>
+        <a th:href="|@{/parselogin?logout=yes}|">退出自定义登录</a>
+    -->
+    <form id="f" action="#" th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout" />
+        <a th:onclick="'javascript:quit()'">退出自定义登录</a>
+    </form>
+</p>
+</body>
+<script th:inline="javascript">
+    <!--/*
+        thymeleaf 是不支持 jsp中的选择器的
+        $("#logout").onclick(function () {
+            f.submit();
+        });
+    */-->
+    function quit() {
+        console.log("111");
+        f.submit();
+    }
+</script>
+</html>
