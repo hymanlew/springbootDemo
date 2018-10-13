@@ -1,6 +1,7 @@
 package hyman.springbootdemo.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+<<<<<<< HEAD
 import hyman.springbootdemo.entity.Message;
 import hyman.springbootdemo.entity.User;
 import org.springframework.validation.BindingResult;
@@ -9,6 +10,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+=======
+import hyman.springbootdemo.entity.User;
+import org.springframework.web.bind.annotation.*;
+
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 import java.util.*;
 
 /**
@@ -42,15 +48,22 @@ import java.util.*;
 @RequestMapping("/demo")
 public class DemoController {
 
+<<<<<<< HEAD
     @Resource
     private Message message;
 
+=======
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
     // 创建线程安全的Map
     public static Map<Integer,User> userMap = Collections.synchronizedMap(new HashMap<>());
 
     @RequestMapping("/index")
     public String index(){
+<<<<<<< HEAD
         return "hello world you，"+message.getTitle()+"，"+message.getDescription();
+=======
+        return "hello world you";
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
     }
 
     // 获取用户列表
@@ -87,6 +100,7 @@ public class DemoController {
         return "success";
     }
 
+<<<<<<< HEAD
     // 我们使用 @Validated（验证，确认），来实现对传入的参数的验证，而不需要再写一堆的 if-else。
     @RequestMapping("/saveUser")
     public void saveUser(@Validated User user, BindingResult bindingResult){
@@ -108,4 +122,11 @@ public class DemoController {
      * @ModelAttribute 适用于接收一组参数变量。
      */
 
+=======
+    /**
+     * @RequestParam 适用于接收单个参数变量。
+     * @PathVariable 适用于接收单个参数变量，并且可以把变量值传递给访问路径中。
+     * @ModelAttribute 适用于接收一组参数变量。
+     */
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 }

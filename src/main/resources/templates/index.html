@@ -39,22 +39,31 @@
     <a th:href="@{/html/index.html}">去 Html 的页面</a>
 
     <!-- /login 为 security的路径 -->
+<<<<<<< HEAD
     <a th:href="@{/dologin}">去登录页面</a>
+=======
+    <a th:href="@{/login}">去登录</a>
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 </p>
 <div>
     <p th:onclick="'javascript:gohtml()'">去内部 html页面</p>
 </div>
 
+<<<<<<< HEAD
 <div>
     <p th:onclick="'javascript:getUser()'">查询用户</p>
     <input type="text" id="age" placeholder="输入年龄">
     <div id="show"></div>
 </div>
+=======
+<div>标记1</div>
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 
 <script>
     function gohtml() {
         location.href = basePath +"html/index";
     }
+<<<<<<< HEAD
     function getUser() {
         var age = $("#age").val();
         $.ajax({
@@ -73,6 +82,8 @@
             }
         });
     }
+=======
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 </script>
 <!--/*
     thymeleaf常用基础知识点：

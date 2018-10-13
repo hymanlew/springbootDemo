@@ -14,9 +14,12 @@ import java.util.List;
 
 /**
  * @Configuration 注解就是用于自定义配置文件的。
+<<<<<<< HEAD
  *
  * 由于 spring boot是自动加载并装配配置文件的，所以只要引入了 security jar包，就算把这个类都注解掉了，但是项目启动
  * 后访问还是要进行认证的，只不过是采用框架默认的认证体系，密码也是被加过密了。
+=======
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
  */
 @Configuration
 @EnableWebSecurity

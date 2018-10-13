@@ -1,5 +1,6 @@
 package hyman.springbootdemo.entity;
 
+<<<<<<< HEAD
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +29,14 @@ public class User {
     @Length(min=6,message="密码长度不能小于6位")
     private String password;
 
+=======
+public class User {
+
+    private Integer id;
+    private String name;
+    private Integer age;
+
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
     public User() {
     }
 

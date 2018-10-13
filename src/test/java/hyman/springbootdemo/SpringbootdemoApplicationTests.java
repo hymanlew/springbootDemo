@@ -6,7 +6,10 @@ import jdk.net.SocketFlow;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
+=======
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -15,6 +18,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+<<<<<<< HEAD
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.PrintingResultHandler;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -24,6 +28,9 @@ import javax.naming.Context;
 
 import java.awt.print.Printable;
 
+=======
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,6 +54,7 @@ public class SpringbootdemoApplicationTests {
 	 * andReturn：最后返回相应的MvcResult；然后进行自定义验证/进行下一步的异步处理；
 	 */
 
+<<<<<<< HEAD
 	/**
 	 * test 包自带的，模拟测试，无须启动服务器，MockMvc 是模拟 http 请求的（get，post）
  	 */
@@ -66,6 +74,15 @@ public class SpringbootdemoApplicationTests {
 	public void setup(){
 		//mvc = MockMvcBuilders.standaloneSetup(new DemoController()).build();
 		mvc = MockMvcBuilders.webAppContextSetup(context).build();
+=======
+    // test 包自带的，模拟测试，无须启动服务器
+	private MockMvc mvc;
+
+	// 使用 build 对应到要测试的类
+	@Before
+	public void setup(){
+		mvc = MockMvcBuilders.standaloneSetup(new DemoController()).build();
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 	}
 
 	/**
@@ -77,11 +94,17 @@ public class SpringbootdemoApplicationTests {
 	 */
 	@Test
 	public void index() throws Exception{
+<<<<<<< HEAD
 		mvc.perform(MockMvcRequestBuilders.get("/demo/index")
 				.accept(MediaType.APPLICATION_JSON_UTF8)).andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk());
 				// 这里的 content 是指定且是固定比对要输出的内容，与上面的 print 相冲突，所以先注释掉
 				//.andExpect(content().string(equalTo("hello world you")));
+=======
+		mvc.perform(MockMvcRequestBuilders.get("/demo/index").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string(equalTo("hello world you")));
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 	}
 
 	@Test
@@ -92,6 +115,7 @@ public class SpringbootdemoApplicationTests {
 		request = MockMvcRequestBuilders.get("/demo/users");
 		mvc.perform(request)
 				.andExpect(status().isOk())
+<<<<<<< HEAD
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(content().string(equalTo("[]")));
 
@@ -101,6 +125,15 @@ public class SpringbootdemoApplicationTests {
 				.param("name","lili")
 				.param("age","20")
 				.param("password","20");
+=======
+				.andExpect(content().string(equalTo("[]")));
+
+		// 2、post 提交一个user
+		request = MockMvcRequestBuilders.post("/demo/user")
+				.param("id","1")
+				.param("name","lili")
+				.param("age","20");
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 		mvc.perform(request)
 				.andExpect(content().string(equalTo("success")));
 
@@ -108,6 +141,7 @@ public class SpringbootdemoApplicationTests {
 		request = MockMvcRequestBuilders.put("/demo/user/1");
 		mvc.perform(request)
 				.andExpect(content().string(equalTo("{\"id\":1,\"name\":\"lili\",\"age\":20}")));
+<<<<<<< HEAD
 
 	}
 
@@ -126,6 +160,8 @@ public class SpringbootdemoApplicationTests {
 			System.out.println(e.getMessage());
 		}
 
+=======
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 	}
 
 	/**
@@ -214,13 +250,21 @@ public class SpringbootdemoApplicationTests {
 
 
 
+<<<<<<< HEAD
 	 	ResultActions（在请求得到响应之后，就会自动生成）：
+=======
+	 	ResultActions：
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 
 			 调用MockMvc.perform(RequestBuilder requestBuilder)后将得到ResultActions，通过ResultActions完成如下三件事：
 
 			 ResultActions andExpect(ResultMatcher matcher) ：添加验证断言来判断执行请求后的结果是否是预期的；
 
+<<<<<<< HEAD
 			 ResultActions andDo(ResultHandler handler) ：添加结果处理器，用于对验证成功后执行的动作，如输出请求及结果过程信息用于调试；
+=======
+			 ResultActions andDo(ResultHandler handler) ：添加结果处理器，用于对验证成功后执行的动作，如输出下请求/结果信息用于调试；
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
 
 			 MvcResult andReturn() ：返回验证成功后的MvcResult；用于自定义验证/下一步的异步处理；(主要是拿到结果进一步做自定义断言)
 	 */

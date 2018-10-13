@@ -44,10 +44,12 @@
 			<scope>test</scope>
 		</dependency>
 
+
 		<!--
 			引入Web模块，包括 RESTFUL、参数校验、内嵌 tomcat 容器等等。
 			因为在 thymeleaf 中已经包含了 web包，所以在这里去掉。
 		-->
+		<!-- 引入Web模块，因为在 thymeleaf 中已经包含了 web包，所以在这里去掉 -->
 		<!--<dependency>-->
 			<!--<groupId>org.springframework.boot</groupId>-->
 			<!--<artifactId>spring-boot-starter-web</artifactId>-->
@@ -62,6 +64,8 @@
 			因此也可以用作静态建模。你可以使用它创建经过验证的XML与HTML模板。
 			相对于编写逻辑或代码，开发者只需将标签属性添加到模板中即可。接下来，这些标签属性就会在DOM（文档对象模型）上执行
 			预先制定好的逻辑。
+
+			注意，由于Thymeleaf使用了XML DOM解析器，因此它并不适合于处理大规模的XML文件。
 		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -74,13 +78,6 @@
 			<artifactId>nekohtml</artifactId>
 			<version>1.9.22</version>
 		</dependency>
-
-		<!-- 热部署依赖，它可以在修改 java 代码之后不需要重启服务器。而 IDEA tool 中的热部署键只是用于刷新静态页面。-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
 
 		<!-- springSecurity -->
 		<dependency>
@@ -107,10 +104,28 @@
 			<version>5.1.21</version>
 		</dependency>
 
+
 		<!-- 监控，运维 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+		<!-- 基于 Hibernate 的数据库处理包，不使用 -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.boot</groupId>-->
+			<!--<artifactId>spring-boot-starter-data-jpa</artifactId>-->
+		<!--</dependency>-->
+
+		<!--
+			热部署插件，
+			该模块在完整的打包环境下运行的时候会被禁用。如果你使用java -jar启动应用或者用一个特定的classloader启动，它会认为这是一个“生产环境”。
+		-->
+        <!-- 热部署依赖，它可以在修改 java 代码之后不需要重启服务器。而 IDEA tool 中的热部署键只是用于刷新静态页面。-->
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
@@ -123,7 +138,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+
 				<!-- 开启热部署功能，必须先加载 devtools jar 包-->
+				<!-- 热部署插件设置 -->
 				<configuration>
 					<fork>true</fork>
 				</configuration>

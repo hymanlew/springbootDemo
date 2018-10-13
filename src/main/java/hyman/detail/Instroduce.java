@@ -55,5 +55,12 @@ public class Instroduce {
      *
      *    举例：我们可以在 src/main/resources/目录下创建 static，并放置一个图片文件。启动程序后访问http://localhost:8080/D.jpg。
      *    如能显示图片，配置成功。
+<<<<<<< HEAD
+=======
+     *
+     * 4，在 spring boot 中，有两种配置文件，一种是application.properties,另一种是application.yml,两种都可以配置spring boot
+     *     项目中的一些变量的定义，参数的设置等。
+     *     application.properties 配置文件在写的时候要写完整。而在yml 文件中配置则是使用冒号进行调用。
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
      */
 }

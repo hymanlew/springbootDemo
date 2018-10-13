@@ -57,7 +57,11 @@ public class GlobalExceptionHandler {
          */
 
         ModelAndView mav = new ModelAndView();
+<<<<<<< HEAD
         mav.addObject("exception",e.getMessage());
+=======
+        //mav.addObject("exception",e.getMessage());
+>>>>>>> fc86736a21522464b4b9832f277ec1070351a2f7
         mav.addObject("url",request.getRequestURL());
         mav.setViewName(DEFAULT_ERROR_VIEW);
         return mav;
