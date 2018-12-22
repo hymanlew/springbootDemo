@@ -1,4 +1,4 @@
-package hyman.springbootdemo.demo.springRabbit;
+package hyman.springbootdemo.demo.springRabbit.manual;
 
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import java.util.HashMap;
 
-@ComponentScan(basePackages = "hyman.springbootdemo.rabbitmqSpring")
+@ComponentScan(basePackages = "hyman.springbootdemo.rabbitmqSpring.manual")
 public class ConsumerApplication {
 
     public static void main(String[] args) {

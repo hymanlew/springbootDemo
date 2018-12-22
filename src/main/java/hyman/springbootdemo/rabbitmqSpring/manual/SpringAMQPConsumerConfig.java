@@ -1,4 +1,4 @@
-package hyman.springbootdemo.rabbitmqSpring;
+package hyman.springbootdemo.rabbitmqSpring.manual;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;

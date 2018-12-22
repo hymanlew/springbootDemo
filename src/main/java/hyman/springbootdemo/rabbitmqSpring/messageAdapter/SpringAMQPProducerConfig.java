@@ -1,4 +1,4 @@
-package hyman.springbootdemo.rabbitmqSpring;
+package hyman.springbootdemo.rabbitmqSpring.messageAdapter;
 
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
