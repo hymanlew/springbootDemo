@@ -43,17 +43,7 @@
 			<scope>test</scope>
 		</dependency>
 
-
-		<!--
-			引入Web模块，包括 RESTFUL、参数校验、内嵌 tomcat 容器等等。
-			因为在 thymeleaf 中已经包含了 web包，所以在这里去掉。
-		-->
-		<!-- 引入Web模块，因为在 thymeleaf 中已经包含了 web包，所以在这里去掉 -->
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-web</artifactId>-->
-		<!--</dependency>-->
-		<!-- 引入Web模块，虽然在 thymeleaf 中已经包含了 web包，但它是不完整的 -->
+		<!-- 引入Web模块，包括 RESTFUL、参数校验、内嵌 tomcat 容器等等。虽然在 thymeleaf 中已经包含了 web包，但它是不完整的 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -113,6 +103,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+			<version>1.5.14.RELEASE</version>
         </dependency>
 
 		<!-- 基于 Hibernate 的数据库处理包，不使用 -->
@@ -122,10 +113,11 @@
 		<!--</dependency>-->
 
 		<!--
-			热部署插件，
-			该模块在完整的打包环境下运行的时候会被禁用。如果你使用java -jar启动应用或者用一个特定的classloader启动，它会认为这是一个“生产环境”。
+			热部署插件：
+			该模块在完整的打包环境下运行的时候会被禁用。如果你使用java -jar启动应用或者用一个特定的classloader启动，它会认
+			为这是一个“生产环境”。
+			它可以在修改 java 代码之后不需要重启服务器。而 IDEA tool 中的热部署键只是用于刷新静态页面。
 		-->
-        <!-- 热部署依赖，它可以在修改 java 代码之后不需要重启服务器。而 IDEA tool 中的热部署键只是用于刷新静态页面。-->
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
