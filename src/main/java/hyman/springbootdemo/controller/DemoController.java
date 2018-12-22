@@ -1,8 +1,13 @@
 package hyman.springbootdemo.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import hyman.springbootdemo.entity.Message;
 import hyman.springbootdemo.entity.User;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import javax.annotation.Resource;
 
 import java.util.*;
 
@@ -37,12 +42,15 @@ import java.util.*;
 @RequestMapping("/demo")
 public class DemoController {
 
+    @Resource
+    private Message message;
+
     // 创建线程安全的Map
     public static Map<Integer,User> userMap = Collections.synchronizedMap(new HashMap<>());
 
     @RequestMapping("/index")
     public String index(){
-        return "hello world you";
+        return "hello world you，"+message.getTitle()+"，"+message.getDescription();
     }
 
     // 获取用户列表
@@ -79,9 +87,24 @@ public class DemoController {
         return "success";
     }
 
+    // 我们使用 @Validated（验证，确认），来实现对传入的参数的验证，而不需要再写一堆的 if-else。
+    @RequestMapping("/saveUser")
+    public void saveUser(@Validated User user, BindingResult bindingResult){
+
+        System.out.println("user:"+user);
+        if(bindingResult.hasErrors()){
+            // spring 框架中的类
+            List<ObjectError> list = bindingResult.getAllErrors();
+            for(ObjectError error:list){
+                System.out.println(error.getCode()+"--"+error.getDefaultMessage());
+            }
+        }
+    }
+
     /**
      * @RequestParam 适用于接收单个参数变量。
      * @PathVariable 适用于接收单个参数变量，并且可以把变量值传递给访问路径中。
+     *               并且路径传参，与 http讲求方法是不相关的，即使用 get、post 方法也能传参
      * @ModelAttribute 适用于接收一组参数变量。
      */
 }

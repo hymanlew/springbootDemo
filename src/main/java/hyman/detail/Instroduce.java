@@ -59,5 +59,16 @@ public class Instroduce {
      * 4，在 spring boot 中，有两种配置文件，一种是application.properties,另一种是application.yml,两种都可以配置spring boot
      *     项目中的一些变量的定义，参数的设置等。
      *     application.properties 配置文件在写的时候要写完整。而在yml 文件中配置则是使用冒号进行调用。
+     *     application.yml 文件同样不允许有空格，和引号。
+     *
+     *     properties文件都需要写全，yml前面相同的可以不写，一层对应一层就好了。
+     *     在yml文件中有些细节需要注意，冒号后面要空一格再写值，虽然在IDE中都会自动空一格。
+     *
+     * 5，yml文件的好处，天然的树状结构，一目了然，实质上跟properties是差不多的。官方给的很多demo，都是用yml文件配置的。
+     * 6，注意点：
+     *  1，原有的key，例如spring.jpa.properties.hibernate.dialect，按“.”分割，都变成树状的配置
+     *  2，key后面的冒号，后面一定要跟一个空格
+     *  3，把原有的application.properties删掉。然后一定要执行一下  maven -X clean install
+     *  4，另外 properties 文件加载时是优先于 yml 文件的
      */
 }
