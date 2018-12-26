@@ -1,4 +1,4 @@
-package hyman.springbootdemo.demo.springRabbit;
+package hyman.springbootdemo.rabbitDemo;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;

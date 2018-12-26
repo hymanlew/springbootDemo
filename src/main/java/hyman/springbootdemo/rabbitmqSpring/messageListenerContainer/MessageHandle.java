@@ -22,8 +22,17 @@ public class MessageHandle {
     @RabbitHandler
     public void add(byte[] body) {
         System.out.println("----------byte[]方法进行处理----------");
+
         try {
-            System.out.println(new String(body,"utf-8"));
+            String data = new String(body,"utf-8");
+            if(data.contains("测试")){
+                // 这里要注意，由于要重复请求的，但是它会一直抛出异常。所以会出现死循环的状态，是正常的结果
+                throw new RuntimeException("测试异常 ==== 重新请求 ====");
+            }else if(data.contains("真实")){
+                throw new RuntimeException("真实异常 ==== 不再请求 ====");
+            }else {
+                System.out.println(data);
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

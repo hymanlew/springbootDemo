@@ -1,4 +1,4 @@
-package hyman.springbootdemo.demo.springRabbit.messageConverter;
+package hyman.springbootdemo.rabbitDemo.messageConverter;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;

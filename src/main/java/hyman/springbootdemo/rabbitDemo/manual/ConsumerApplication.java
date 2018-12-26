@@ -1,4 +1,4 @@
-package hyman.springbootdemo.demo.springRabbit.manual;
+package hyman.springbootdemo.rabbitDemo.manual;
 
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;

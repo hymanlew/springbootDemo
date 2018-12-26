@@ -1,41 +1,28 @@
-package hyman.springbootdemo.demo.springRabbit.messageListenerContainer;
+package hyman.springbootdemo.rabbitDemo.messageListenerContainer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hyman.springbootdemo.rabbitmqSpring.messageConverter.Order;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-/**
- * 生产者启动类：
- *
- * RabbitAdmin: 用于声明交换机、队列、绑定等。
- * RabbitTemplate: 用于 RabbitMQ 消息的发送和接收。
- * MessageListenerContainer: 监听容器，为消息入队提供异步处理。
- */
-
-@ComponentScan(basePackages = "hyman.springbootdemo.rabbitmqSpring.messageListenerContainer")
+//@ComponentScan(basePackages = "hyman.springbootdemo.rabbitmqSpring.messageListenerContainer")
+@ComponentScan(basePackages = "hyman.springbootdemo.rabbitmqSpring.messageReliability")
 public class ProducerApplication {
 
-    public static void sendString(RabbitTemplate template, String s){
+    public static void sendString(RabbitTemplate template, String s,String id){
         MessageProperties properties = new MessageProperties();
         properties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
         properties.setContentType("utf-8");
         Message message = new Message(s.getBytes(),properties);
-        template.send("hymanexchange","test.me",message);
+        template.send("hymanexchange","test.me",message,new CorrelationData(id));
+        //template.send("hymanexchange","test1.me",message,new CorrelationData(id));
     }
 
 
@@ -49,6 +36,16 @@ public class ProducerApplication {
         // 绑定交换机
         rabbitAdmin.declareExchange(new TopicExchange("hymanexchange",true,false,new HashMap<>()));
 
-       sendString(template,"字符串");
+        for (int i=0; i<3; i++) {
+            if(i == 0){
+                sendString(template,"测试异常","id1");
+                continue;
+            }else if(i == 1){
+                sendString(template,"真实异常","id2");
+                continue;
+            }else {
+                sendString(template,"正常数据","id3");
+            }
+        }
     }
 }

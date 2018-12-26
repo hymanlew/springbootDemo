@@ -2,7 +2,6 @@ package hyman.springbootdemo.rabbitmqSpring.messageListenerContainer;
 
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 import org.springframework.amqp.support.ConsumerTagStrategy;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +23,9 @@ public class SpringAMQPConsumerConfig {
                 return "自定义消息监听容器";
             }
         });
+
+        // 指定 rabbit 异常处理器
+        simpleFactory.setErrorHandler(new CustomlRejectingErrorHandler());
         return simpleFactory;
     }
 }
