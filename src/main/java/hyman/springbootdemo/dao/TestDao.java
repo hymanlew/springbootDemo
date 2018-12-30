@@ -2,13 +2,15 @@ package hyman.springbootdemo.dao;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import javax.annotation.Resource;
 
 /**
  * 做为在 service中调用的 dao层，但实际工作的是其父类或是父接口
  * 这样是为了体现高可用（或者是适配器模式）
  */
-@Component("dao")
+@Repository("testDao")
 public class TestDao extends DemoDao<Object>{
 
     /*
@@ -18,7 +20,7 @@ public class TestDao extends DemoDao<Object>{
      * 即适配器模式。
      */
 
-    //@Resource(name="sqlSessionTemplate")
+    @Resource(name="sqlSessionTemplate")
     private transient SqlSessionTemplate sqlSessionTemplate;
 
 }

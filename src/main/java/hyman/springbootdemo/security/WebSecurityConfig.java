@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -29,16 +30,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
      */
     @Resource
     public void configHandler(AuthenticationManagerBuilder auth) throws Exception {
-        // 先暂时指定一个用户，并设置为最高权限 admin。
+        /**
+         * 先暂时指定一个用户，并设置为最高权限 admin。
+         *
+         * 设置内存指定的登录的账号密码，指定角色。并且不加 .passwordEncoder(new MyPasswordEncoder())，就不是以明文的方式进
+         * 行匹配，会报错。
+         *
+         * 使用 passwordEncoder 后，在页面提交时候，密码以明文的方式进行匹配。
+         *
+         */
         List<User> list = new ArrayList<>();
-        list.add(new User("admin",123456));
-        list.add(new User("user",123456));
+        list.add(new User(1,"admin","123456"));
+        list.add(new User(2,"user","123456"));
         for(User user:list){
             auth
                 .inMemoryAuthentication()
-                    .withUser(user.getName()).password(user.getAge()+"").roles("ADMIN");
+                    .withUser(user.getName()).password(user.getPassword()).roles("ADMIN");
+            auth
+                .inMemoryAuthentication()
+                    .passwordEncoder(new MyPasswordEncoder())
+                    .withUser(user.getName()).password(user.getPassword()).roles("ADMIN");
         }
-
     }
 
     /**
@@ -49,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         /**
+         * 设置登录,注销，表单登录不用拦截，其他请求要拦截。
          * antMatchers：逐步解析比对用户的请求。
          *
          * 利用流的方式来定义安全策略:
@@ -67,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .authorizeRequests()
                 // 主页，或登录页面不设限制
                 .antMatchers("/do/test").permitAll()
+                //.antMatchers("/").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -74,7 +88,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .logoutSuccessUrl("/parselogin?logout=yes")
                 //.logoutSuccessUrl("/login?logout")
                 .permitAll();
+
+        //关闭默认的 csrf 认证
+        http.csrf().disable();
     }
 
-
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // 设置静态资源不要拦截
+        web.ignoring().antMatchers("static/**");
+    }
 }

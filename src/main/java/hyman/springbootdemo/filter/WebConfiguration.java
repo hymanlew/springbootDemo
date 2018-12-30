@@ -1,4 +1,4 @@
-package hyman.springbootdemo.webconfig;
+package hyman.springbootdemo.filter;
 
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -34,10 +34,10 @@ public class WebConfiguration {
 
     /**
      * Spring 提供了 FilterRegistrationBean 类，此类提供 setOrder 方法，可以为 filter 设置排序值，让 spring 在注册 web
-     * filter之前排序后再依次注册。
+     * filter之前排序后再依次注册。可以为自定义 Filter设置执行顺序。
      */
     @Bean
-    public FilterRegistrationBean testFilter(){
+    public FilterRegistrationBean testFilterRegist(){
         FilterRegistrationBean regist = new FilterRegistrationBean();
         //注入过滤器
         regist.setFilter(new MyFilter());
@@ -51,6 +51,7 @@ public class WebConfiguration {
         regist.setOrder(1);
         return regist;
     }
+
 
     public class MyFilter implements Filter{
         @Override

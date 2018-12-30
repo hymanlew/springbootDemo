@@ -33,4 +33,9 @@ public class MainController {
     public String parselogin(){
         return "index";
     }
+
+    //@RequestMapping("/error")
+    //public String goerror(){
+    //    return "errorSelf";
+    //}
 }

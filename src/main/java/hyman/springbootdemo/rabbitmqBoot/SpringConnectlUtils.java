@@ -1,4 +1,4 @@
-package hyman.springbootdemo.rabbitmqSpring.messageConverter;
+package hyman.springbootdemo.rabbitmqBoot;
 
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

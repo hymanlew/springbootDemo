@@ -59,7 +59,8 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 
-#log4j:
-#  config-location: classpath:log4j.properties
+#自定义配置信息（entity：message）
+title: hyman
+description: testMessage
 
 
