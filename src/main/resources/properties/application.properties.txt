@@ -1,4 +1,3 @@
-
 #======================================================
 
 # 该文件同样不允许有空格，和引号
@@ -19,7 +18,7 @@
 server.port=8888
 
 #自定义程序启动时符号，默认路径为 resource
-banner.location=classpath:banner.txt
+banner=classpath:banner.txt
 
 #======================================================
 
@@ -30,9 +29,6 @@ description=testMessage
 
 #最好加入 start，end 标识
 #thymeleaf start
-
-# Content-Type value.
-spring.thymeleaf.content-type=text/html
 
 # 模板编码，See also StandardTemplateModeHandlers.
 #spring.thymeleaf.mode=HTML5

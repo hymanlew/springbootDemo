@@ -1,0 +1,64 @@
+#Config
+
+#开启 debug 模式时，在 debug下才能输出日志
+log4j.debug=true
+
+#level, appenderName1, appenderName2, …
+log4j.rootLogger=INFO,inLine,console,console1,stdout
+
+# 检测不同包项目的级别
+log4j.logger.org.springframework=ERROR
+log4j.logger.com.hyman.util=WARN
+
+# 启用 sql 日志的输出
+#log4j.logger.org.apache.ibatis.logging.jdbc.PreparedStatementLogger=debug
+#log4j.logger.org.apache.ibatis.logging=debug
+#log4j.logger.org.apache.ibatis.jdbc.ScriptRunner=debug
+#log4j.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate=debug
+#log4j.logger.java.sql.Resultset=debug
+#log4j.logger.java.sql.Connection=debug
+#log4j.logger.java.sql.Statement=debug
+#log4j.logger.java.sql.Preparedstatement=debug
+
+##Console appender（输出源）
+log4j.appender.inLine=org.apache.log4j.ConsoleAppender
+log4j.appender.inLine.Threshold=INFO
+log4j.appender.inLine.layout=org.apache.log4j.PatternLayout
+#f 日志消息产生时所在的文件名称，l 为代码中的行号，n 为输出一个回车换行符
+log4j.appender.inLine.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] %-5p %m (%F:%L)%n
+
+
+#指定输出的类型，指定为控制台
+log4j.appender.console=org.apache.log4j.ConsoleAppender
+log4j.appender.console.Threshold=WARN
+
+#自定义输出格式，类名，参数详情
+log4j.appender.console.layout=org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] %-5p %t %m (%F:%L)%n
+
+##debug appender
+log4j.appender.console1=org.apache.log4j.ConsoleAppender
+log4j.appender.console1.Threshold=ERROR
+log4j.appender.console1.layout=org.apache.log4j.PatternLayout
+
+#d 为日期，p 为日志级别字母的对齐方式，t 为日志事件的线程名，m 为产生日志信息的方法名
+log4j.appender.console1.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] %-5p %t %m (%F:%L)%n
+
+
+#log4j.appender.stdout=org.apache.log4j.DailyRollingFileAppender
+#log4j.appender.stdout.MaxFileSize=50MB
+#log4j.appender.stdout.MaxBackupIndex=10
+#log4j.appender.stdout.DatePattern='.'yyyy-MM-dd
+#log4j.appender.stdout.File=logs/notify.log
+#log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+#log4j.appender.stdout.layout.ConversionPattern=%d - %m%n
+
+#表示消息增加到指定文件中，false则将消息覆盖指定的文件内容，默认值是true。
+#log4j.appender.stdout=org.apache.log4j.RollingFileAppender
+#log4j.appender.stdout.MaxFileSize=50MB
+#log4j.appender.stdout.MaxBackupIndex=10
+#log4j.appender.stdout.File=${catalina.base}/logs/notify.log
+#log4j.appender.stdout.Append=true
+#log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+#log4j.appender.stdout.layout.ConversionPattern=[%d{yyyy-MM-dd HH\:mm\:ss}] %-5p %t %m (%F\:%L)%n
+

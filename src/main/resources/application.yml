@@ -33,7 +33,6 @@ spring:
 
   thymeleaf:
     enable: true
-    content-type: text/html
     mode: LEGACYHTML5
     encoding: UTF-8
     cache: false
@@ -53,17 +52,12 @@ spring:
       password: hyman
       addresses: 127.0.0.1:5672
 
-
 mybatis:
   # 指定全局配置文件位置
   config-location: classpath:mybatis-config.xml
   # 指定sql映射文件位置
   mapper-locations: classpath:mapper/*.xml
 
-#  spring:
-#    SqlSessionFactoryBean:
-#      configLocation: classpath:spring/mybatis-config.xml
-#    SqlSessionTemplate: index=0
 
 #log4j:
 #  config-location: classpath:log4j.properties

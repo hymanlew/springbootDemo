@@ -32,5 +32,14 @@ public class Detail {
      * ConditionalRejectingErrorHandler 中配置有 FatalExceptionStrategy，会调用 FatalExceptionStrategy 中的 isFatal 方法来判断异
      * 常是不是属于致命异常。
      *
+     *
+     * 队列异常：
+     * 1，reply-code=406, reply-text=PRECONDITION_FAILED，是因为 RabbitMQ不允许使用不同的参数重新定义一个队列，所以已经存在的队列，
+     *    我们无法修改其属性。如重复定义就可能遇到这个异常错误。解决方案：清空队列或者修改队列名：
+     *
+     *    查看所有队列信息， rabbitmqctl list_queues
+     *    关闭应用，rabbitmqctl stop_app
+     *    清除所有队列，rabbitmqctl reset（相当于恢复出厂设置，所以一定要小心）
+     *    启动应用，和上述关闭命令配合使用，达到清空队列的目的，rabbitmqctl start_app
      */
 }

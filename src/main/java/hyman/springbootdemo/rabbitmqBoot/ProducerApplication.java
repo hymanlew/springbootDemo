@@ -1,15 +1,16 @@
-package hyman.springbootdemo;
+package hyman.springbootdemo.rabbitmqBoot;
 
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageDeliveryMode;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 
 
 /**
- * 该配置是整个程序的入口，由系统自动生成，不需要改动。（暂时不能启动这个主程序，因为 rabbitmq demo 重复定义了 class）
+ * 该配置是整个程序 rabbimq 生产者的入口，启动类。
  *
  * SpringBootApplication，这个注解是一个组合注解，聚合了多个注解的功能：排除自启动项，排除自动启动的beanName，扫描包，扫描类，
  *
@@ -21,12 +22,24 @@ import org.springframework.cache.annotation.EnableCaching;
  * 在启动类中添加对mapper包扫描@MapperScan，或者直接在Mapper类上面添加注解@Mapper,建议使用上面那种，不然每个mapper加个注解也挺麻烦的。
  */
 
-@MapperScan(basePackages = "hyman.springbootdemo.dao")
 @SpringBootApplication
-@EnableCaching
-public class SpringbootdemoApplication {
+public class ProducerApplication {
+
+	private static RabbitTemplate template;
+
+	@Autowired
+	public void setTemplate(RabbitTemplate template){
+		ProducerApplication.template = template;
+	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootdemoApplication.class, args);
+		// boot 主程序启动入口
+		SpringApplication.run(ProducerApplication.class);
+
+		MessageProperties messageProperties = new MessageProperties();
+		messageProperties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+		messageProperties.setContentType("UTF-8");
+		Message message = new Message(("boot 主生产信息").getBytes(), messageProperties);
+		template.send("bootexchange", "add", message);
 	}
 }
