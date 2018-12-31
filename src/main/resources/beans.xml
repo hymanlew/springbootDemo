@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- 注意它不能与现有的 spring 的 bean 有冲突，只能单独写一个。然后再手动扫描到 spring 中 -->
+    <bean id="testImport" class="hyman.springbootdemo.demo.DateJsonDemo"></bean>
+</beans>

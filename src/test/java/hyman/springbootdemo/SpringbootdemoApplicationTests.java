@@ -1,10 +1,13 @@
 package hyman.springbootdemo;
 
+import hyman.springbootdemo.entity.Person;
+import hyman.springbootdemo.util.Logutil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -16,18 +19,39 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.Resource;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * 使用系统自身的测试类，编写一个简单的单元测试来模拟 http 请求
+ * 使用系统自身的测试类，编写一个简单的单元测试来模拟 http 请求。
  */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
 public class SpringbootdemoApplicationTests {
+
+    @Resource
+    private Person person;
+
+    @Test
+    public void t1(){
+        Logutil.logger.info(person.toString());
+    }
+
+    @Resource
+    private ApplicationContext ioc;
+
+    @Test
+    public void t2(){
+        // 只有使用 @ImportResource 注解导入后才能拿到 bean。但是这种方式是老的，建议使用 configuration bean 注解的方式。
+        boolean flag = ioc.containsBean("testImport");
+        System.out.println("===== "+flag);
+    }
+
 
     /**
      * perform：执行一个RequestBuilder请求，会自动执行SpringMVC的流程并映射到相应的控制器执行处理；

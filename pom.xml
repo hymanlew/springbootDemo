@@ -12,8 +12,13 @@
 	<description>Demo project for Spring Boot</description>
 
 	<!--
-		这里统一用 spring-boot-starter-parent做为 parent，所以以下的各种包都不用填写版本号,
-		要特别注意不可用太高或最新的版本，因为有的包还不支持，比如 2.0.3 版本就不可以导入 web 包
+		这里统一用 spring-boot-starter-parent做为 parent（父项目），而它的父项目（直接点进去即可）是 spring-boot-dependencies，
+		这个才是真正管理 Spring Boot应用里面的所有依赖版本，所以以下的各种包都不用填写版本号。
+		要特别注意不可用太高或最新的版本。
+
+		spring-boot-starter：spring-boot 的场景启动器；帮我们导入了相关模块正常运行所依赖的组件；Spring Boot将所有的功能场景都
+		抽取出来，做成一个个的starters（启动器），只需要在项目里面引入这些 starter 相关场景的所有依赖都会导入进来。要用什么功能
+		就导入什么场景的启动器即可。
 	-->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -124,6 +129,13 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- 配置文件处理器，将 POJO 中所有属性和配置文件中相关的配置进行绑定 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- rabbitmq java client -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
@@ -157,17 +169,14 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-access</artifactId>
-			<version>1.2.3</version>
 		</dependency>
 		<!--<dependency>-->
 			<!--<groupId>org.slf4j</groupId>-->
@@ -179,12 +188,11 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.8.11</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.8.11</version>
+			<!--<version>2.8.11.1</version>-->
 		</dependency>
 
 		<!-- json 对象与 json 格式字符串，相互转换的两种方式-->
@@ -192,12 +200,6 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<!-- 必须与 boot 的版本兼容，否则会有冲突，无法启动 -->
-			<version>2.6.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20160212</version>
 		</dependency>
 
 		<dependency>
@@ -210,6 +212,7 @@
 	<!--
     	下面这个插件是用来运行 Springboot的，通常有两种方式可以运行SpringBoot：	一种是通过直接运行main方法，另外一种是通过使用下面的插件运行。
     	两种方式有差别，一旦项目中需要访问资源的时候就需要通过插件运行，否则无法访问到资源。
+    	即这个插件可以把项目打包成可执行的 jar 包。
 	-->
 	<build>
 		<plugins>

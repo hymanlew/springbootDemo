@@ -8,7 +8,7 @@
      debug：当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
 -->
 <!-- <configuration scan="true" scanPeriod="60 seconds" debug="false"> -->
-<configuration>
+<configuration debug="true">
 
     <!-- 动态日志级别 -->
     <!--<jmxConfigurator />-->

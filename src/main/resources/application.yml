@@ -59,8 +59,34 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 
-#自定义配置信息（entity：message）
+# 自定义配置信息（entity：message）
 title: hyman
 description: testMessage
 
 
+# key后面的冒号，后面一定要跟一个空格。以空格的缩进来控制层级关系；只要是左对齐的一列数据，都是同一个层级的。
+# 属性和值也是大小写敏感的。字符串默认不用加上单引号或者双引号。
+
+# 值加上双引号，不会转义字符串里面的特殊字符；而是将特殊字符本身表示的意思，转为字符串输出。"w \n c" 则输出 w 换行 c。
+# 值加上单引号，会转义特殊字符，即把特殊字符作为普通的字符串数据输出。"w \n c" 则输出 w \n c。
+
+# 对象、Map（属性和值）（键值对）：
+person:
+    lastName: zhangsan
+    age: 20
+    boss: false
+    birth: 2017/12/12
+    maps: {k1: v1,k2: 12}
+    lists:
+      ‐ lisi
+      ‐ zhaoliu
+    message:
+      title: 小狗
+      description: 12
+
+#行内写法：
+person1: {lastName: zhangsan,age: 18}
+
+
+# 数组（List、Set）：用- 值表示数组中的一个元素（见上）。行内写法：
+pets1: [cat,dog,pig]

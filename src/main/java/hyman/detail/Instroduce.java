@@ -50,25 +50,41 @@ public class Instroduce {
      *    其模板引擎中的任何一个，它们默认的模板配置路径为：src/main/resources/templates。当然也可以修改这个路径，具体如何修改，
      *    可在后续各模板引擎的配置属性中查询并修改。
      *
-     * 3，Spring Boot默认提供静态资源目录位置需置于 classpath下（即 resourse目录），目录名需符合如下规则：
-     *    /static， /public， /resources， /META-INF/resources
-     *
-     *    举例：我们可以在 src/main/resources/目录下创建 static，并放置一个图片文件。启动程序后访问http://localhost:8080/D.jpg。
-     *    如能显示图片，配置成功。
+     * 3，Spring Boot默认提供资源目录位置需置于 classpath下（即 resourse目录）：
+     *    /static（静态资源），
+     *    /template（模板页面，默认jar包使用嵌入式的Tomcat，默认不支持JSP页面）；可以使用模板引擎 freemarker、thymeleaf），
+     *    application.properties，或 application.yml（全局的配置文件，配置文件名是固定的）。
      *
      * 4，在 spring boot 中，有两种配置文件，一种是application.properties,另一种是application.yml,两种都可以配置spring boot
      *     项目中的一些变量的定义，参数的设置等。
      *     application.properties 配置文件在写的时候要写完整。而在yml 文件中配置则是使用冒号进行调用。
-     *     application.yml 文件同样不允许有空格，和引号。
-     *
      *     properties文件都需要写全，yml前面相同的可以不写，一层对应一层就好了。
-     *     在yml文件中有些细节需要注意，冒号后面要空一格再写值，虽然在IDE中都会自动空一格。
      *
      * 5，yml文件的好处，天然的树状结构，一目了然，实质上跟properties是差不多的。官方给的很多demo，都是用yml文件配置的。
+     *
      * 6，注意点：
-     *  1，原有的key，例如spring.jpa.properties.hibernate.dialect，按“.”分割，都变成树状的配置
-     *  2，key后面的冒号，后面一定要跟一个空格
+     *  1，原有的key，例如spring.jpa.properties.hibernate.dialect，按“.”分割，都变成树状的配置。
+     *  2，key后面的冒号，后面一定要跟一个空格。以空格的缩进来控制层级关系；只要是左对齐的一列数据，都是同一个层级的。
+     *  3，属性和值也是大小写敏感的。字符串默认不用加上单引号或者双引号。
+     *
+     *  4，值加上双引号，不会转义字符串里面的特殊字符；而是将特殊字符本身表示的意思，转为字符串输出。"w \n c" 则输出 w 换行 c。
+     *     值加上单引号，会转义特殊字符，即把特殊字符作为普通的字符串数据输出。"w \n c" 则输出 w \n c。
+     *
+     *     对象、Map（属性和值）（键值对）：（行内写法：person: {lastName: zhangsan,age: 18}）
+     *     person:
+     *          lastName: zhangsan
+     *          age: 20
+     *
+     *     数组（List、Set）：用- 值表示数组中的一个元素：（行内写法：pets: [cat,dog,pig]）
+     *     pets:
+             ‐ cat
+             ‐ dog
+             ‐ pig
+     *
      *  3，把原有的application.properties删掉。然后一定要执行一下  maven -X clean install
      *  4，另外 properties 文件加载时是优先于 yml 文件的
+     *
+     * 7，YAML（YAML Ain't Markup Language），是一个标记语言，又不是一个标记语言。以前的配置文件；大多都使用的是 xxxx.xml文件；
+     *    但是 YAML 是以数据为中心，比json、xml等更适合做配置文件；
      */
 }
