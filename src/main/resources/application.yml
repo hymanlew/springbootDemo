@@ -1,9 +1,19 @@
 
+
+# 开户 debug 模式，让控制台打印自动配置报告进行查看哪些自动配置类生效。
+# Positive matches：代表自动配置成功，Negative matches：没有自动配置，在有需要时再导入包，再查看。
+#debug: true
+
 server:
-  port: 8888
+  port: 8081
   tomcat:
     access_log_enabled: true
     basedir: target/tomcat
+
+
+# 项目的访问路径，不必要
+#  servlet:
+#    context-path: /boot
 
 spring:
   datasource:
@@ -31,32 +41,13 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
-  thymeleaf:
-    enable: true
-    mode: LEGACYHTML5
-    encoding: UTF-8
-    cache: false
-    prefix: classpath:/templates/
-    suffix: .html
+# 激活指定的配置文件
+  profiles:
+    active: dev
 
-  resources:
-    static-locations: classpath:/static/
-
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-
-  rabbitmq:
-      virtual-host: hymanhost
-      username: hyman
-      password: hyman
-      addresses: 127.0.0.1:5672
-
-mybatis:
-  # 指定全局配置文件位置
-  config-location: classpath:mybatis-config.xml
-  # 指定sql映射文件位置
-  mapper-locations: classpath:mapper/*.xml
+# 激活指定的配置文档块
+#  profiles:
+#    active: dev2
 
 
 # 自定义配置信息（entity：message）
@@ -72,7 +63,7 @@ description: testMessage
 
 # 对象、Map（属性和值）（键值对）：
 person:
-    lastName: zhangsan
+    lastName: zhangsan${random.uuid}
     age: 20
     boss: false
     birth: 2017/12/12
@@ -81,8 +72,9 @@ person:
       ‐ lisi
       ‐ zhaoliu
     message:
-      title: 小狗
-      description: 12
+#      title: ${person.lastName}_小狗
+      title: ${person.hello:hello}_小狗
+      description: ${random.int}
 
 #行内写法：
 person1: {lastName: zhangsan,age: 18}
@@ -90,3 +82,20 @@ person1: {lastName: zhangsan,age: 18}
 
 # 数组（List、Set）：用- 值表示数组中的一个元素（见上）。行内写法：
 pets1: [cat,dog,pig]
+
+# 配置文件占位符，分为：
+# 随机数占位（RandomValuePropertySource），${random.value}，${random.int(10)}、${random.int[1024,65536]} 等等。
+# 属性配置占位，可以引用前面配置过的属性。如果声明的属性和值是存在的，则可以是用 : 冒号指定默认值。
+
+
+
+# 定义不同的配置文档块，并进行配置
+---
+server:
+  port: 8000
+  tomcat:
+    access_log_enabled: true
+    basedir: target/tomcat
+
+spring:
+  profiles: dev2

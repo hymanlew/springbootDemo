@@ -23,23 +23,10 @@ public class Instroduce {
      *     7，绝对没有代码生成和XML配置要求。没有冗余代码生成和XML配置的要求
      *
      *
-     * 1，通过SPRING INITIALIZR工具产生基础项目（是一个网站 http://start.spring.io/）
-     * 2，选择构建工具Maven Project、Spring Boot版本等信息，Generate Project下载项目压缩包
-     * 3，IntelJ 导入解压包：File –> New –> Project from Existing Sources –> Import project from external model –> Maven，
-     *    点击 Next到最后。
-     * 4，配置 pom.xml
-     *
-     * 1，也可以使用 intelJ 创建项目，new project -> spring Initaializr -> http://start.spring.io
-     * 2，指定 springboot 版本（同样不可以用高版本），要导入的包，选择 core核心包，thymeleaf模板，等等
-     * 3，其他步骤同上个一样
-     *
-     *
      * 在使用 springboot 时，没有了原来自己整合 Spring应用时繁多的 XML配置内容，替代它的是在 pom.xml中引入模块化的 Starter POMs，
      * 其中各个模块都有自己的默认配置，所以如果不是特殊应用场景，就只需要在 application.properties中完成一些属性配置就能开启各模
      * 块的应用。
      * application.properties 是整个应用程序的配置文件，SpringBoot自动加载，SpringBoot提供针对各种组件的都可以通过它进行配置。
-     *
-     *
      *
      * 注意事项：
      * 1，要将 Application类放在最外侧,即包含所有子包，因为 spring-boot 会自动加载启动类所在包下及其子包下的所有组件。即自定
@@ -69,22 +56,30 @@ public class Instroduce {
      *
      *  4，值加上双引号，不会转义字符串里面的特殊字符；而是将特殊字符本身表示的意思，转为字符串输出。"w \n c" 则输出 w 换行 c。
      *     值加上单引号，会转义特殊字符，即把特殊字符作为普通的字符串数据输出。"w \n c" 则输出 w \n c。
+     *     对象、Map（属性和值）（键值对），数组（List、Set），详见配置文件。
      *
-     *     对象、Map（属性和值）（键值对）：（行内写法：person: {lastName: zhangsan,age: 18}）
-     *     person:
-     *          lastName: zhangsan
-     *          age: 20
-     *
-     *     数组（List、Set）：用- 值表示数组中的一个元素：（行内写法：pets: [cat,dog,pig]）
-     *     pets:
-             ‐ cat
-             ‐ dog
-             ‐ pig
-     *
-     *  3，把原有的application.properties删掉。然后一定要执行一下  maven -X clean install
-     *  4，另外 properties 文件加载时是优先于 yml 文件的
+     *  5，把原有的application.properties删掉。然后一定要执行一下  maven -X clean install
+     *  6，另外 properties 文件加载时是优先于 yml 文件的，即使是多环境下的配置文件也是如此。
      *
      * 7，YAML（YAML Ain't Markup Language），是一个标记语言，又不是一个标记语言。以前的配置文件；大多都使用的是 xxxx.xml文件；
      *    但是 YAML 是以数据为中心，比json、xml等更适合做配置文件；
+     *
+     *
+     * Profile 是 spring 对不同环境（开发，测试，生产等环境）提供不同配置功能的支持，可以通过激活、指定参数等方式快速切换环境。
+     * 1，使用多 profile 的文件形式，即 application-{profile环境标识}.properties/yml，在使用时只需要在主配置文件中激活即可。
+     *    spring: profiles: active: dev
+     *
+     * 2，如果是使用 yml 的配置文件，可以使用三个横线（---）直接定义不同的配置文档块。使用 spring: profiles: prod 指定属于哪个环境。
+     *    然后在最上面的文档块中，去激活指定的文档块。spring: profiles: active: dev2
+     *
+     * 3、激活指定profile：
+     *    1、在配置文件中指定 spring.profiles.active=dev。
+     *
+     *    2、命令行（它优先于第一种）：
+     *       开发测试时是在开发工具上方的 configaration（tomcat的位置） 中的 program argument 中写入命令，--spring.profiles.active=dev。
+     *       在服务器启动部署时，使用 java -jar xxx.jar --spring.profiles.active=dev；
+     *
+     *    3、虚拟机参数，开发工具上方 configaration 中的 VM option 中写入命令：-Dspring.profiles.active=dev（固定写法）。
+     *
      */
 }

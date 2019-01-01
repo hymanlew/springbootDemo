@@ -66,95 +66,95 @@ public class SpringbootdemoApplicationTests {
     /**
      * test 包自带的，模拟测试，无须启动服务器，MockMvc 是模拟 http 请求的（get，post）
      */
-    private MockMvc mvc;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    /**
-     * 使用 mockmvc 构造器构造一个 mvc，它有两个实现的方法：
-     * 1，standaloneSetup：是要对应到要测试的类，然后生成一个构造方法。
-     * 2，webAppContextSetup：是使用系统上下文来生成一个构造 mvc。
-     * <p>
-     * 所以最好要使用第二种。
-     */
-    @Before
-    public void setup() {
-        // 使用 build 对应到要测试的类
-        //mvc = MockMvcBuilders.standaloneSetup(new DemoController()).build();
-        mvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
-
-
-    /**
-     * 使用 MockServletContext来构建一个空的 WebApplicationContext，这样我们创建的 DemoController就可以在 @Before函数中
-     * 创建并传递到 MockMvcBuilders.standaloneSetup（）函数中。
-     * <p>
-     * 其中，equalto 的值必须与响应是相同的，否则报错
-     *
-     * @throws Exception
-     */
-    @Test
-    public void index() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/demo/index")
-                .accept(MediaType.APPLICATION_JSON_UTF8)).andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
-        // 这里的 content 是指定且是固定比对要输出的内容，与上面的 print 相冲突，所以先注释掉
-        //.andExpect(content().string(equalTo("hello world you")));
-        mvc.perform(MockMvcRequestBuilders.get("/demo/index").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("hello world you")));
-    }
-
-    @Test
-    public void userTest() throws Exception {
-        RequestBuilder request = null;
-
-        // 1、使用 get 请求查一下user列表，应该为空
-        request = MockMvcRequestBuilders.get("/demo/users");
-        mvc.perform(request)
-                .andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().string(equalTo("[]")));
-
-        // 2、post 提交一个user，spingboot 框架会自动对应属性并填充到参数实现类中
-        request = MockMvcRequestBuilders.post("/demo/user")
-                .param("id", "1")
-                .param("name", "lili")
-                .param("age", "20")
-                .param("password", "20");
-
-        // 2、post 提交一个user
-        request = MockMvcRequestBuilders.post("/demo/user")
-                .param("id", "1")
-                .param("name", "lili")
-                .param("age", "20");
-        mvc.perform(request)
-                .andExpect(content().string(equalTo("success")));
-
-        // 3、get一个id为1的user
-        request = MockMvcRequestBuilders.put("/demo/user/1");
-        mvc.perform(request)
-                .andExpect(content().string(equalTo("{\"id\":1,\"name\":\"lili\",\"age\":20}")));
-
-    }
-
-    @Test
-    public void testError() {
-
-        RequestBuilder request = null;
-        try {
-            request = MockMvcRequestBuilders.post("/demo/saveUser")
-                    .param("id", "1")
-                    .param("name", "")
-                    .param("age", "200")
-                    .param("password", "11");
-            mvc.perform(request).andDo(MockMvcResultHandlers.print());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
+    //private MockMvc mvc;
+    //
+    //@Autowired
+    //private WebApplicationContext context;
+    //
+    ///**
+    // * 使用 mockmvc 构造器构造一个 mvc，它有两个实现的方法：
+    // * 1，standaloneSetup：是要对应到要测试的类，然后生成一个构造方法。
+    // * 2，webAppContextSetup：是使用系统上下文来生成一个构造 mvc。
+    // * <p>
+    // * 所以最好要使用第二种。
+    // */
+    //@Before
+    //public void setup() {
+    //    // 使用 build 对应到要测试的类
+    //    //mvc = MockMvcBuilders.standaloneSetup(new DemoController()).build();
+    //    mvc = MockMvcBuilders.webAppContextSetup(context).build();
+    //}
+    //
+    //
+    ///**
+    // * 使用 MockServletContext来构建一个空的 WebApplicationContext，这样我们创建的 DemoController就可以在 @Before函数中
+    // * 创建并传递到 MockMvcBuilders.standaloneSetup（）函数中。
+    // * <p>
+    // * 其中，equalto 的值必须与响应是相同的，否则报错
+    // *
+    // * @throws Exception
+    // */
+    //@Test
+    //public void index() throws Exception {
+    //    mvc.perform(MockMvcRequestBuilders.get("/demo/index")
+    //            .accept(MediaType.APPLICATION_JSON_UTF8)).andDo(MockMvcResultHandlers.print())
+    //            .andExpect(status().isOk());
+    //    // 这里的 content 是指定且是固定比对要输出的内容，与上面的 print 相冲突，所以先注释掉
+    //    //.andExpect(content().string(equalTo("hello world you")));
+    //    mvc.perform(MockMvcRequestBuilders.get("/demo/index").accept(MediaType.APPLICATION_JSON))
+    //            .andExpect(status().isOk())
+    //            .andExpect(content().string(equalTo("hello world you")));
+    //}
+    //
+    //@Test
+    //public void userTest() throws Exception {
+    //    RequestBuilder request = null;
+    //
+    //    // 1、使用 get 请求查一下user列表，应该为空
+    //    request = MockMvcRequestBuilders.get("/demo/users");
+    //    mvc.perform(request)
+    //            .andExpect(status().isOk())
+    //            .andDo(MockMvcResultHandlers.print())
+    //            .andExpect(content().string(equalTo("[]")));
+    //
+    //    // 2、post 提交一个user，spingboot 框架会自动对应属性并填充到参数实现类中
+    //    request = MockMvcRequestBuilders.post("/demo/user")
+    //            .param("id", "1")
+    //            .param("name", "lili")
+    //            .param("age", "20")
+    //            .param("password", "20");
+    //
+    //    // 2、post 提交一个user
+    //    request = MockMvcRequestBuilders.post("/demo/user")
+    //            .param("id", "1")
+    //            .param("name", "lili")
+    //            .param("age", "20");
+    //    mvc.perform(request)
+    //            .andExpect(content().string(equalTo("success")));
+    //
+    //    // 3、get一个id为1的user
+    //    request = MockMvcRequestBuilders.put("/demo/user/1");
+    //    mvc.perform(request)
+    //            .andExpect(content().string(equalTo("{\"id\":1,\"name\":\"lili\",\"age\":20}")));
+    //
+    //}
+    //
+    //@Test
+    //public void testError() {
+    //
+    //    RequestBuilder request = null;
+    //    try {
+    //        request = MockMvcRequestBuilders.post("/demo/saveUser")
+    //                .param("id", "1")
+    //                .param("name", "")
+    //                .param("age", "200")
+    //                .param("password", "11");
+    //        mvc.perform(request).andDo(MockMvcResultHandlers.print());
+    //    } catch (Exception e) {
+    //        System.out.println(e.getMessage());
+    //    }
+    //
+    //}
 
     /**
      * spring mvc测试框架提供了两种方式，独立安装和集成Web环境测试（此种方式并不会集成真正的web环境，而是通过相应的Mock API进行模拟测试，无须启动服务器）

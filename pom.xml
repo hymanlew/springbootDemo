@@ -153,19 +153,14 @@
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 
-		<!-- log4j 日志插件 -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-		</dependency>
+		<!-- log4j 日志门面插件 -->
 		<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
 		<version>1.7.25</version>
 		</dependency>
 
-		<!-- 使用 logback -->
+		<!-- 使用 logback 日志实现插件 -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -178,6 +173,28 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-access</artifactId>
 		</dependency>
+
+		<!--
+		SpringBoot 底层也是使用 slf4j+logback 的方式进行日志记录，并且也把其他的日志都替换成了slf4j。如果我们要引入其他框架，
+		一定要把这个框架的默认日志依赖移除掉。因为 SpringBoot 能自动适配所有的日志，而且底层使用slf4j+logback的方式记录日志，
+		引入其他框架的时候，只需要把这个框架依赖的日志框架排除掉即可；例如：
+		<dependency>
+			<groupId>xxxxx</groupId>
+			<artifactId>xxxxx‐core</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons‐logging</groupId>
+					<artifactId>commons‐logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		-->
+
+		<!--<dependency>-->
+			<!--<groupId>log4j</groupId>-->
+			<!--<artifactId>log4j</artifactId>-->
+			<!--<version>1.2.16</version>-->
+		<!--</dependency>-->
 		<!--<dependency>-->
 			<!--<groupId>org.slf4j</groupId>-->
 			<!--<artifactId>slf4j-log4j12</artifactId>-->

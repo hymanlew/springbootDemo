@@ -107,9 +107,21 @@ management.security.enabled=false
 management.port=8081
 
 
-# path为本机的log地址，logging.level后面可以根据包路径配置不同资源的log级别
+# path为本机的log地址，logging.level后面可以根据包路径配置不同资源的log级别。注意该方式只能设置在本文件中，不能在 yml 文件中。
+
+# 在当前磁盘的根路径下创建 logs文件夹；使用 spring.log 作为默认文件。不指定路径则是在当前项目下生成springboot.log日志
+logging.path=/logs
 #logging.path=F:/log
+
+# 在控制台输出的日志的格式
+logging.pattern.console=%d{yyyy‐MM‐dd} [%thread] %‐5level %logger{50} ‐ %msg%n
+
+# 指定文件中日志输出的格式
+logging.pattern.file=%d{yyyy‐MM‐dd} === [%thread] === %‐5level === %logger{50} ==== %msg%n
+
 #logging.level.hyman.springbootdemo=DEBUG
 #logging.level.org.springframework.web=INFO
+
+
 
 #======================================================
