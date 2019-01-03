@@ -12,8 +12,8 @@
 
     <!-- 动态日志级别 -->
     <!--<jmxConfigurator />-->
-    <!-- 定义日志的根目录，定义在本磁盘根目录下 -->
-    <property name="LOG_HOME" value="/Bootlogs" />
+    <!-- 定义日志的根目录，加斜杠是定义在本磁盘根目录下，不加则是定义在本项目的根目录下 -->
+    <property name="LOG_HOME" value="logs" />
     <!-- 定义日志文件名称 -->
     <property name="logName" value="bootLog"></property>
 
@@ -22,51 +22,49 @@
 
     <!-- ch.qos.logback.core.ConsoleAppender 表示控制台输出 -->
     <appender name="inLine" class="ch.qos.logback.core.ConsoleAppender">
-        <!--<encoder>-->
-            <!--&lt;!&ndash;<pattern>[%d{yyyy‐MM‐dd}] === [%thread] === %‐5level === %logger{50} ==== %msg%n</pattern>&ndash;&gt;-->
-            <!--<pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5p %m (%F:%L)%n</pattern>-->
-        <!--</encoder>-->
-        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-            <!--<level>INFO</level>-->
-        <!--</filter>-->
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
+            <!-- springProfile 标签可以指定某段配置只在某个环境下生效 -->
             <springProfile name="dev">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ----> [%thread] ---> %-5level %logger{50} - %msg%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ---> [%thread] ---> %-5level %logger{50} - %msg%n</pattern>
             </springProfile>
             <springProfile name="!dev">
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [%thread] ==== %-5level %logger{50} - %msg%n</pattern>
             </springProfile>
-        </layout>
-    </appender>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
 
-    <!--<appender name="console" class="ch.qos.logback.core.ConsoleAppender">-->
-        <!--&lt;!&ndash;-->
-      <!--日志输出格式：-->
-          <!--%d        表示日期时间，-->
-          <!--%thread   表示线程名，-->
-          <!--%-5level  级别从左显示5个字符宽度-->
-          <!--%logger{50} 表示logger名字最长50个字符，否则按照句点分割。-->
-          <!--%msg      日志消息，-->
-          <!--%n        是换行符-->
-      <!--&ndash;&gt;-->
-        <!--<encoder>-->
-            <!--<pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5p %t %m (%F:%L)%n</pattern>-->
-        <!--</encoder>-->
-        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-            <!--<level>WARN</level>-->
-        <!--</filter>-->
-    <!--</appender>-->
-    <!--<appender name="console1" class="ch.qos.logback.core.ConsoleAppender">-->
-        <!--<encoder>-->
-            <!--<pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5p %t %m (%F:%L)%n</pattern>-->
-        <!--</encoder>-->
-        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-            <!--<level>ERROR</level>-->
-        <!--</filter>-->
-    <!--</appender>-->
+        <!--
+        日志输出格式：
+            %d        表示日期时间，
+            %thread   表示线程名，
+            %-5level  级别从左显示5个字符宽度
+            %logger{50} 表示logger名字最长50个字符，否则按照句点分割。
+            %msg      日志消息，
+            %n        是换行符
+
+        encoder 的主要工作有两个：①
+            1，将一个event事件转换成一组byte数组，②将转换后的字节数据输出到文件中。
+            2，encoder组件是在0.9.19版本之后才引进来的。在以前的版本中，appender是使用layout（将一个event事件转换成一个字符串），
+                然后使用【java.io.writer】对象将字符串写入到文件中。
+
+        自从0.9.19版本之后，Fileappender和他的子类是期望使用encoder，不再使用layout。因为layout仅仅完成了将一个 event事件转换成
+        一个字符串这一个功能。此外，layout不能控制将字符串写出到文件。layout不能整合event事件到一组中。而 encoder 不仅仅能按照格
+        式进行转化，而且还能将数据写入到文件中。
+        -->
+        <!--<layout class="ch.qos.logback.classic.PatternLayout">-->
+            <!--<springProfile name="dev">-->
+                <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} -&ndash;&gt; [%thread] -&ndash;&gt; %-5level %logger{50} - %msg%n</pattern>-->
+            <!--</springProfile>-->
+        <!--</layout>-->
+    </appender>
 
     <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender -->
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!-- 指定日志文件的名称 -->
+        <file>${LOG_HOME}/${logName}.log</file>
 
         <!-- 按级别输出日志 -->
         <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
@@ -79,18 +77,18 @@
         <encoder>
             <pattern>
                 <!-- 设置日志输出格式 -->
-                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n
+                <!--%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n-->
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [ %thread ] - [ %-5level ] [ %logger{50} : %line ] - %msg%n
             </pattern>
         </encoder>
 
         <!-- 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动。-->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--
             滚动时产生的文件的存放位置及文件名称 %d{yyyy-MM-dd}：按天进行日志滚动 %i：当文件大小超过maxFileSize时，按照 i 进
             行文件滚动，下列格式是死的，不可修改。
-             或 ${catalina.base} 路径是指的本项目的根路径。所以最好使用绝对路径存放 log 文件夹。
+            最好使用绝对路径存放 log 文件夹。
             -->
-            <!--<fileNamePattern>${LOG_HOME}/logs/notify_%d{yyyy-MM-dd}_%i.log</fileNamePattern>-->
             <fileNamePattern>${LOG_HOME}/${logName}_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
 
             <!--
@@ -100,18 +98,16 @@
             -->
             <MaxHistory>${maxHistory}</MaxHistory>
             <!--
-            当日志文件超过maxFileSize指定的大小是，根据上面提到的%i进行日志文件滚动 注意此处配置SizeBasedTriggeringPolicy是无法实现按文件大小进行滚动的，必须配置timeBasedFileNamingAndTriggeringPolicy
+            当日志文件超过maxFileSize指定的大小是，根据上面提到的%i进行日志文件滚动 注意此处配置 SizeBasedTriggeringPolicy 是
+            无法实现按文件大小进行滚动的，必须配置timeBasedFileNamingAndTriggeringPolicy。
             -->
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>50MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxFileSize>50MB</maxFileSize>
         </rollingPolicy>
 
         <!-- 日志输出格式： -->
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <!--<pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5p %t %m (%F:%L)%n</pattern>-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [ %thread ] - [ %-5level ] [ %logger{50} : %line ] - %msg%n</pattern>
-        </layout>
+        <!--<layout class="ch.qos.logback.classic.PatternLayout">-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [ %thread ] - [ %-5level ] [ %logger{50} : %line ] - %msg%n</pattern>-->
+        <!--</layout>-->
     </appender>
 
     <!--
@@ -123,17 +119,15 @@
             true： 表示当前logger的appender-ref和rootLogger的appender-ref都有效
    -->
     <logger name="org.springframework" level="INFO" additivity="false"/>
-    <logger name="com.hyman.util" level="DEBUG"/>
+    <logger name="com.hyman.util" level="TRACE"/>
     <logger name="debug" level="DEBUG"/>
 
     <!--
-   root与logger是父子关系，没有特别定义则默认为root，任何一个类只会和一个logger对应，
-   要么是定义的logger，要么是root，判断的关键在于找到这个logger，然后判断这个logger的appender和level。
-   -->
-    <root level="INFO">
+       root与logger是父子关系，没有特别定义则默认为root，任何一个类只会和一个logger对应，
+       要么是定义的logger，要么是root，判断的关键在于找到这个logger，然后判断这个logger的appender和level。
+    -->
+    <root level="DEBUG">
         <appender-ref ref="inLine"/>
-        <!--<appender-ref ref="console"/>-->
-        <!--<appender-ref ref="console1"/>-->
         <appender-ref ref="file"/>
     </root>
 </configuration>

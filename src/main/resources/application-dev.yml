@@ -10,7 +10,7 @@ server:
 spring:
   thymeleaf:
     enable: true
-    mode: LEGACYHTML5
+    mode: HTML
     encoding: UTF-8
     cache: false
     prefix: classpath:/templates/
@@ -29,11 +29,14 @@ spring:
       password: hyman
       addresses: 127.0.0.1:5672
 
+
 mybatis:
   # 指定全局配置文件位置
   config-location: classpath:mybatis-config.xml
   # 指定sql映射文件位置
   mapper-locations: classpath:mapper/*.xml
 
-# 所有的配置属性，参考文档：https://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/htmlsingle/#common-application-properties。
+logging:
+  path: classpath:/logback-spring.xml
 
+# 所有的配置属性，参考文档：https://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/htmlsingle/#common-application-properties。

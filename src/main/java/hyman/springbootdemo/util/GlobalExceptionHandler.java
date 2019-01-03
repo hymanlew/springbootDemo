@@ -32,8 +32,70 @@ public class GlobalExceptionHandler {
     public static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 
+    //@ExceptionHandler(Exception.class)
+    //public String noFoundHandler2(HttpServletRequest request,Exception e){
+    //
+    //    request.setAttribute("msg",""+e.getMessage());
+    //    //request.setAttribute("exception",e);
+    //    request.setAttribute("url",""+request.getRequestURL());
+    //    request.setAttribute("test","测试页面");
+    //    logger.error("======================================"+e.getMessage());
+    //    return DEFAULT_ERROR_VIEW;
+    //}
+
+    /**
+     * 500 - Internal Server Error
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public String noFoundHandler2(HttpServletRequest request,Exception e){
+    public ModelAndView defaultHandler(HttpServletRequest request,Exception e){
+
+        /**
+         * ModelAndView 类用来存储处理完后的结果数据，以及显示该数据的视图。从名字上看 Model代表模型，View代表视图，这个
+         * 名字就很好地解释了该类的作用。
+         *
+         * 业务处理器调用模型层处理完用户请求后，把结果数据存储在该类的model属性中，把要返回的视图信息存储在该类的view属性中，
+         * 然后让该 ModelAndView返回该 Spring MVC框架。框架通过调用配置文件中定义的视图解析器，对该对象进行解析，最后把结果
+         * 数据显示在指定的页面上。
+         *
+         * ModelAndView构造方法可以指定返回的页面名称，也可以通过setViewName()方法跳转到指定的页面。
+         * 使用addObject()设置需要返回的值，addObject()有几个不同参数的方法，可以默认和指定返回对象的名字。
+         *
+         * ModelAndView对象有两个作用：
+         * 作用一，设置转向地址（这也是ModelAndView和ModelMap的主要区别），ModelAndView view = new ModelAndView("path:url");
+         * 作用二, 用于传递控制方法处理结果数据到结果页面，也就是说我们把需要在结果页面上需要的数据放到 ModelAndView对象中即可，
+         *         他的作用类似于 request对象的setAttribute方法的作用，用来在一个请求过程中传递处理的数据。
+         *         即：addObject(String key,Object value);
+         */
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception",e.getMessage());
+        mav.addObject("url",request.getRequestURL());
+        mav.setViewName(DEFAULT_ERROR_VIEW);
+        return mav;
+    }
+
+    /*
+     *  400-Bad Request
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public String handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        logger.error("无法读取JSON...", e);
+        return DEFAULT_ERROR_VIEW;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public String handleValidationException(MethodArgumentNotValidException e)
+    {
+        logger.error("参数验证异常...", e);
+        return DEFAULT_ERROR_VIEW;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public String noFoundHandler(HttpServletRequest request,Exception e){
 
         request.setAttribute("msg",""+e.getMessage());
         //request.setAttribute("exception",e);
@@ -43,78 +105,16 @@ public class GlobalExceptionHandler {
         return DEFAULT_ERROR_VIEW;
     }
 
-    ///**
-    // * 500 - Internal Server Error
-    // */
-    //@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    //@ExceptionHandler(Exception.class)
-    //public ModelAndView defaultHandler(HttpServletRequest request,Exception e){
-    //
-    //    /**
-    //     * ModelAndView 类用来存储处理完后的结果数据，以及显示该数据的视图。从名字上看 Model代表模型，View代表视图，这个
-    //     * 名字就很好地解释了该类的作用。
-    //     *
-    //     * 业务处理器调用模型层处理完用户请求后，把结果数据存储在该类的model属性中，把要返回的视图信息存储在该类的view属性中，
-    //     * 然后让该 ModelAndView返回该 Spring MVC框架。框架通过调用配置文件中定义的视图解析器，对该对象进行解析，最后把结果
-    //     * 数据显示在指定的页面上。
-    //     *
-    //     * ModelAndView构造方法可以指定返回的页面名称，也可以通过setViewName()方法跳转到指定的页面。
-    //     * 使用addObject()设置需要返回的值，addObject()有几个不同参数的方法，可以默认和指定返回对象的名字。
-    //     *
-    //     * ModelAndView对象有两个作用：
-    //     * 作用一，设置转向地址（这也是ModelAndView和ModelMap的主要区别），ModelAndView view = new ModelAndView("path:url");
-    //     * 作用二, 用于传递控制方法处理结果数据到结果页面，也就是说我们把需要在结果页面上需要的数据放到 ModelAndView对象中即可，
-    //     *         他的作用类似于 request对象的setAttribute方法的作用，用来在一个请求过程中传递处理的数据。
-    //     *         即：addObject(String key,Object value);
-    //     */
-    //
-    //    ModelAndView mav = new ModelAndView();
-    //    mav.addObject("exception",e.getMessage());
-    //    mav.addObject("url",request.getRequestURL());
-    //    mav.setViewName(DEFAULT_ERROR_VIEW);
-    //    return mav;
-    //}
-    //
-    ///*
-    // *  400-Bad Request
-    // */
-    //@ResponseStatus(HttpStatus.BAD_REQUEST)
-    //@ExceptionHandler(HttpMessageNotReadableException.class)
-    //public String handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-    //    logger.error("无法读取JSON...", e);
-    //    return DEFAULT_ERROR_VIEW;
-    //}
-    //
-    //@ResponseStatus(HttpStatus.BAD_REQUEST)
-    //@ExceptionHandler(MethodArgumentNotValidException.class)
-    //public String handleValidationException(MethodArgumentNotValidException e)
-    //{
-    //    logger.error("参数验证异常...", e);
-    //    return DEFAULT_ERROR_VIEW;
-    //}
-    //
-    //@ResponseStatus(HttpStatus.NOT_FOUND)
-    //@ExceptionHandler(NoHandlerFoundException.class)
-    //public String noFoundHandler(HttpServletRequest request,Exception e){
-    //
-    //    request.setAttribute("msg",""+e.getMessage());
-    //    //request.setAttribute("exception",e);
-    //    request.setAttribute("url",""+request.getRequestURL());
-    //    request.setAttribute("test","测试页面");
-    //    logger.error("======================================"+e.getMessage());
-    //    return DEFAULT_ERROR_VIEW;
-    //}
-    //
-    //@ResponseStatus(HttpStatus.NOT_FOUND)
-    //@ExceptionHandler(NotFoundException.class)
-    //public String noFoundHandler1(HttpServletRequest request,Exception e){
-    //
-    //    request.setAttribute("msg",""+e.getMessage());
-    //    //request.setAttribute("exception",e);
-    //    request.setAttribute("url",""+request.getRequestURL());
-    //    request.setAttribute("test","测试页面");
-    //    logger.error("======================================"+e.getMessage());
-    //    return DEFAULT_ERROR_VIEW;
-    //}
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public String noFoundHandler1(HttpServletRequest request,Exception e){
+
+        request.setAttribute("msg",""+e.getMessage());
+        //request.setAttribute("exception",e);
+        request.setAttribute("url",""+request.getRequestURL());
+        request.setAttribute("test","测试页面");
+        logger.error("======================================"+e.getMessage());
+        return DEFAULT_ERROR_VIEW;
+    }
 
 }

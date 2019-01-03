@@ -1,13 +1,13 @@
 package hyman.springbootdemo.security;
 
 import hyman.springbootdemo.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -15,18 +15,18 @@ import java.util.List;
 
 /**
  * @Configuration 注解就是用于自定义配置文件的。
- *
+ * <p>
  * 由于 spring boot是自动加载并装配配置文件的，所以只要引入了 security jar包，就算把这个类都注解掉了，但是项目启动
  * 后访问还是要进行认证的，只不过是采用框架默认的认证体系，密码也是被加过密了。
  */
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
-     * @Resource ，使用该注解使系统自动连接注入到自定义的用户管理器，AuthenticationManagerBuilder。
      * @param auth
      * @throws Exception
+     * @Resource ，使用该注解使系统自动连接注入到自定义的用户管理器，AuthenticationManagerBuilder。
      */
     @Resource
     public void configHandler(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,14 +40,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
          *
          */
         List<User> list = new ArrayList<>();
-        list.add(new User(1,"admin","123456"));
-        list.add(new User(2,"user","123456"));
-        for(User user:list){
+        list.add(new User(1, "admin", "123456"));
+        list.add(new User(2, "user", "123456"));
+        for (User user : list) {
             auth
-                .inMemoryAuthentication()
+                    .inMemoryAuthentication()
                     .withUser(user.getName()).password(user.getPassword()).roles("ADMIN");
             auth
-                .inMemoryAuthentication()
+                    .inMemoryAuthentication()
                     .passwordEncoder(new MyPasswordEncoder())
                     .withUser(user.getName()).password(user.getPassword()).roles("ADMIN");
         }
@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     /**
      * 如果不重写此方法，则 security 系统会自动生成一个登录页面，且对所有页面都进行拦截。
+     *
      * @param http
      * @throws Exception
      */
@@ -70,32 +71,49 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
          * 2，通过 formLogin() 定义当需要用户登录时候，转到的登录页面（loginPage）。
          * 3，并且必须自定义登录验证路径，否则不能正常登录，因为缺少配置。并且不能是根目录
          */
+
         http
-            .formLogin()
-                .loginPage("/dologin")
-                .permitAll()
-                .loginProcessingUrl("/parselogin")
-                .failureUrl("/parselogin?error=yes")
-                .and()
-                .authorizeRequests()
+            .authorizeRequests()
                 // 主页，或登录页面不设限制
-                .antMatchers("/do/test").permitAll()
-                //.antMatchers("/").permitAll()
-                .anyRequest()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/test/**").permitAll()
+                //.antMatchers("/security/**").access("hasRole('ADMIN') and hasRole('USER')")
+                .antMatchers("/security/**").hasAnyRole("ADMIN")
+                .antMatchers("/demo/**").hasAnyRole("ADMIN")
+            // 任何请求,登录后可以访问
+            .anyRequest()
                 .authenticated()
-                .and()
+            .and()
+            .formLogin()
+                .loginPage("/login")
+                //可以自定义 form 表单提交的参数
+                .usernameParameter("username")
+                .passwordParameter("password")
+                // 该路径必须与登录页面，控制器方法保持一致（它是显示在浏览器上的路径）。否则会 302 重定向，或 404。
+                .loginProcessingUrl("/security")
+                // 指定登录成功的连接，并带上数据
+                .successHandler(new SimpleUrlAuthenticationSuccessHandler("/security/login"))
+
+                //也可以不指定登录成功的页面路径，因为它是重定向，所以 request 中的数据就会没有了
+                //.successForwardUrl("/security/welcome")
+                //同样也可以自定义登录成功的页面路径，但它也是重定向，所以 request 中的数据就会没有了
+                //.successHandler(new MyUrlSuccessHandler())
+
+                //如果用户没有访问受保护的页面，默认跳转到页面
+                //.defaultSuccessUrl("/security/success")
+                .failureForwardUrl("/parselogin?error=yes")
+            .and()
             .logout()
                 .logoutSuccessUrl("/parselogin?logout=yes")
-                //.logoutSuccessUrl("/login?logout")
                 .permitAll();
 
-        //关闭默认的 csrf 认证
+        //默认开启，关闭默认的 csrf 认证
         http.csrf().disable();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // 设置静态资源不要拦截
-        web.ignoring().antMatchers("static/**");
+        // 设置静态资源不要拦截，定义为 resource 下的文件夹
+        web.ignoring().antMatchers("classpath:/static/**");
     }
 }

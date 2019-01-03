@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- 必须加上这一句，否则 th 不可用 -->
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta content="text/html;charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,18 +22,28 @@
     springboot 不推荐使用 jsp，首先是其本身对 jsp 的支持就不是很理想，不是很兼容。再者 jsp页面并不能很好的实现前后端分离，
     主要是不利用前端进行独立显示，和开发。
 
-    th:text 使用 |xxx| 拼接字符串，否则会解析失败。并且如果当传递有数据时，就显示数据，则后面的 welcome 就不显示了。
+    th:text 使用 |xxx| 拼接字符串，否则会解析失败。并且如果当传递有数据时，就显示数据，则后面的 welcome 就不显示了，即替换掉。
     即原有的值只是为了给前端开发时做展示用的.这样的话很好的做到了前后端分离.
 
-    |…|中只能包含变量表达式${…}，不能包含其他常量、条件表达式等。
-
-    #{...} : Message 表达式，显示为中文编码
-    ${}：变量表达式
-    *{} ：选择变量表达式
-    @{}: 链接 URL 表达式
+    th：任意html属性；作用是替换原生属性的值。
 */-->
-<h1 th:inline="text">[[${#httpServletRequest.remoteUser}]]，welcome</h1>
-<h1 th:inline="text">当前登录的用户是： [[${#httpServletRequest.remoteUser}]]!</h1>
+
+<h1 th:inline="text">当前登录的用户是： [[${#httpServletRequest.remoteUser}]]，welcome!</h1>
+<div th:id="${test}" th:class="${test}" th:text="${test}">被替换的信息，并转义特殊字符</div>
+<div th:utext="${test}">被替换的信息，但不转义特殊字符</div>
+
+<!--<p>test：<span th:text="${user.name}">admin</span></p>-->
+<!--<div th:object="${user}">-->
+    <!--<p>name：<span th:text="*{name}">admin</span></p>-->
+    <!--<p>pass：<span th:text="*{password}">admin</span></p>-->
+<!--</div>-->
+
+<!--<div th:object="${session.user}">-->
+    <!--<p>Name: <span th:text="*{name}">Sebastian</span>.</p>-->
+    <!--<p>Surname: <span th:text="*{password}">Pepper</span>.</p>-->
+<!--</div>-->
+
+
 <p>
     <!-- 此处不能使用 js 定义的根目录，只能使用 / 路径了 -->
     <a th:href="@{/html/index.html}">去 Html 的页面</a>
@@ -81,7 +91,7 @@
 <!--/*
     thymeleaf常用基础知识点：
 
-        1、在html页面中引入thymeleaf命名空间，即<html xmlns:th=http://www.thymeleaf.org></html>，此时在html模板文件中动态的属性使用th:命名空间修饰
+        1、在html页面中引入thymeleaf命名空间，即<html xmlns:th=http://www.thymeleaf.org></html>，此时在html模板文件中动态的属性使用th:命名空间修饰。
 
         2、引用静态资源文件，比如CSS和JS文件，语法格式为“@{}”，如@{/js/blog/blog.js}会引入/static目录下的/js/blog/blog.js文件
 
@@ -95,16 +105,29 @@
         </span>
         以上代码表示若blog.publishTime时间不为空，则显示时间
 
-
         6、时间的格式化，
         ${#dates.format(blog.publishTime,'yyyy-MM-dd HH:mm:ss')}
         表示将时间格式化为”yyyy-MM-dd HH:mm:ss”格式化写法与Java格式化Date的写法是一致的。
 
-
-        7、字符串拼接，有两种形式
-        比如拼接这样一个URL:/blog/delete/{blogId}
+        7、字符串拼接，有两种形式，比如拼接这样一个 URL:/blog/delete/{blogId}：
         第一种：th:href="'/blog/delete/' + ${blog.id }"
         第二种：th:href="${'/blog/delete/' + blog.id }"
+
+           |…|中只能包含变量表达式${…}，不能包含其他常量、条件表达式等。
+
+
+    ${...} : 获取传递的变量值。获取对象的属性、调用方法（${a.b.c}）。使用内置的基本对象（${session.xxx}）。内置的工具对象
+            （${#number.xxx}，${#strings.tostring(obj)}）。
+
+    *{...}：选择表达式：和${}在功能上是一样；并且还可以代表当前元素父级元素中获取的值。
+
+    #{...}：获取国际化内容
+    @{}: 链接 URL 表达式，@{/url(Id=${execId},execType='FAST')}，带参数的。
+    ~{...}：片段引用表达式，<div th:insert="~{commons :: main}">...</div>。
+
+    条件运算（三元运算符）：If‐then: (if) ? (then)，If‐then‐else: (if) ? (then) : (else)，Default: (value) ?: (defaultvalue)
+
+
 */-->
 </body>
 </html>

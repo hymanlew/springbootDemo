@@ -9,6 +9,7 @@ server:
   tomcat:
     access_log_enabled: true
     basedir: target/tomcat
+    uri-encoding: UTF-8
 
 
 # 项目的访问路径，不必要
@@ -40,6 +41,11 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  http:
+    encoding:
+      charset: utf-8
+
 
 # 激活指定的配置文件
   profiles:

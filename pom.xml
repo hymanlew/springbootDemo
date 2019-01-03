@@ -31,6 +31,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
+		<!--布局功能的支持程序 thymeleaf3主程序 layout2以上版本，切换thymeleaf版本-->
+		<thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
 	</properties>
 
 
@@ -54,6 +57,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+        <!-- 引入jquery‐webjar 库，访问时只需要写webjars下面资源的名称即可，boot 专用。webjars：以jar包的方式引入静态资源 -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+
 		<!--
 			Thymeleaf [taɪm lif] 是一个XML/XHTML/HTML5模板引擎，可用于Web与非Web环境中的应用开发。它是一个开源的Java库，
 			基于Apache License 2.0许可。
@@ -75,7 +85,6 @@
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
-			<version>1.9.22</version>
 		</dependency>
 
 		<!-- springSecurity -->

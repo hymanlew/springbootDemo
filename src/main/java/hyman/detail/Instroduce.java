@@ -1,5 +1,7 @@
 package hyman.detail;
 
+import org.thymeleaf.Thymeleaf;
+
 public class Instroduce {
     /**
      * spring boot 是在现有Spring框架的基础上发布了一个创新的主要框架，其主要动机是简化配置和部署spring应用程序的过程。
@@ -80,6 +82,26 @@ public class Instroduce {
      *       在服务器启动部署时，使用 java -jar xxx.jar --spring.profiles.active=dev；
      *
      *    3、虚拟机参数，开发工具上方 configaration 中的 VM option 中写入命令：-Dspring.profiles.active=dev（固定写法）。
+     *
+     *
+     * SpringBoot默认帮我们配置好了日志；如果需要使用自定义的配置文件，则在 resource 路径下放上每个日志框架自己的配置文件即可。
+     * Logback：	logback-spring.xml , logback-spring.groovy , logback.xml（被日志框架直接识别） ，logback.groovy
+     * Log4j2：		log4j2-spring.xml or log4j2.xml
+     * Java Util Logging：	logging.properties
+     *
+     * 但推荐使用 logback-spring.xml，因为这样日志框架就不直接加载日志的配置项，而由SpringBoot解析日志配置，就可以使用 SpringBoot
+     * 的高级 Profile 功能。即可以指定某段配置只在某个环境下生效。
+     *
+     *
+     * 传统管理静态资源主要依赖于复制粘贴，不利于后期维护，所以 springboot 使用 WebJars对前端依赖进行统一管理！WebJars 是将 Web前端
+     * Javascript和CSS 等资源打包成Java 的 Jar包，这样在 Java Web开发中我们可以借助 Maven 这些依赖库的管理，保证这些Web资源版本唯一性。
+     *
+     * "/**" 访问当前项目的任何资源，都去（静态资源的文件夹）找映射：
+     * "classpath:/META‐INF/resources/",
+     * "classpath:/resources/",
+     * "classpath:/static/",
+     * "classpath:/public/"， "/"：表示当前项目的根路径
+     * 所有的 **斜杠favicon.ico（图标）都是在静态资源文件下找。
      *
      */
 }

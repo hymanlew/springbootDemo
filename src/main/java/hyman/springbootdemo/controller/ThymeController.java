@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
-@RequestMapping("do")
+@RequestMapping("/test")
 public class ThymeController {
 
-    @RequestMapping("test")
+    @RequestMapping
     public String test(HttpServletRequest request){
         request.setAttribute("test","hello man");
         // return模板文件的名称，对应 src/main/resources/templates/index.html
