@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Spring Boot构建RESTful：
+ * Spring Boot 构建 RESTful：
  * 即在设计web接口的时候，REST主要是用于定义接口名，接口名一般是用名词写，不用动词，而表达“获取，删除，更新”的操作，就用请求
  * 类型来区分。
  * REST架构风格包含了统一接口的概念，统一接口包含一组受限的良定义的操作，由它们进行资源的访问和操作。即不论什么资源，都使用相
@@ -71,7 +71,7 @@ public class DemoController {
         return "success";
     }
 
-    // 根据 id，获取 User信息，variable：变量
+    // @PathVariable("id") 根据 id，获取 User信息，variable：变量
     @RequestMapping(value = "/user/{id}",method = RequestMethod.PUT)
     public User getUser(@PathVariable Integer id) {
 

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <!--
+        Edge 模式告诉 IE 以最高级模式渲染文档，也就是任何 IE 版本都以当前版本所支持的最高级标准模式渲染，避免版本升级造成的影响。
+        简单的说，就是什么版本IE 就用什么版本的标准模式渲染，或强制 IE 使用 Chrome Frame 渲染
+    -->
+    <meta content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--
+        viewport，是用于在移动设备上进行网页的重构或开发，是设置了当前页面在移动端的显示格式。 content属性值 :
+
+        width：            可视区域的宽度，值可为数字或 关键词device-width（即设备宽度）
+        height：           同width
+        intial-scale：     页面首次被显示是可视区域的缩放级别，取值1.0则页面按实际尺寸显示，无任何缩放
+        maximum-scale=1.0, minimum-scale=1.0;  可视区域的缩放级别，
+        maximum-scale：     用户可将页面放大的程序，1.0将禁止用户放大到实际尺寸之上。
+        user-scalable：     是否可对页面进行缩放，no 禁止缩放
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <title>Title</title>
+</head>
+<body>
+
+<!--
+引入公共片段，~{templatename::fragmentname}:模板名::片段名。
+
+三种引入公共片段的th属性：
+    th:insert：将公共片段整个插入到声明引入的元素中（默认是在 div 标签中），也可以不用写 ~{}。但行内写法必须加上：[[~{}]];[(~{})]；
+    th:replace：将声明引入的元素替换为公共片段。
+    th:include：将被引入的片段的内容包含进这个标签中。
+
+引入片段的时候传入参数：
+    th:class="${setclass=='1'?'active':'}"， th:replace="filename::#id(setclass='1')">
+-->
+<div th:insert="~{commons/index::topbar}"></div>
+<div th:insert="commons/index::topbar"></div>
+<div th:replace="commons/index::topbar"></div>
+
+<h3><a th:href="@{/html/addEmp}">添加员工</a></h3>
+<table style="border: 3px solid darkgoldenrod;">
+    <thead>
+        <tr>
+            <td style="border: 3px solid darkgoldenrod;">ID</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>密码</td>
+            <td>年龄</td>
+            <td>出生日期</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="emp:${emps}"  style="border: 3px solid darkgoldenrod;">
+            <td th:text="${emp.id}">1</td>
+            <td>[[${emp.name}]]</td>
+            <td th:text="${emp.sex == 1?'男':'女'}">pass</td>
+            <td th:text="${emp.password}">pass</td>
+            <td th:text="${emp.age}">age</td>
+            <td th:text="${#dates.format(emp.birth,'yyyy-MM-dd')}">age</td>
+            <td>
+                <a th:href="@{/emp/getById/} + ${emp.id}">编辑</a>
+
+                <!--
+                页面中的 form 表单只支持 post，get 两种请求方式。所以需要使用 SpringMVC 中的 HiddenHttpMethodFilter，指定提交
+                的请求方式。
+                但是目前的代码，会使用大量的内存，即每个工人都有生成一个表单。所以要使用 js 外部调用的方式来提交表单。
+                 -->
+                <!--<form th:action="@{/emp/delete/} + ${emp.id}" method="post">-->
+                    <!--<input type="hidden" name="_method" value="delete" />-->
+                    <!--<button type="submit">表单方式删除</button>-->
+                <!--</form>-->
+
+                <!-- 使用 thymeleaf 提供的自定义属性功能，来自定义属性并获取值 -->
+                <button class="delete" th:attr="dele=@{/emp/delete/} + ${emp.id}">删除</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- 使用 class 属性来触发表单的提交，注意这里 action 的值是写死的 -->
+<!--<form id="deleteEmp" th:action="@{/emp/delete/1}" method="post">-->
+    <!--<input type="hidden" name="_method" value="delete" />-->
+<!--</form>-->
+
+<form id="deleteEmp" method="post">
+    <input type="hidden" name="_method" value="delete" />
+</form>
+
+
+<div>
+    <input type="text" id="age" placeholder="输入年龄"><span th:onclick="'javascript:getUser()'">查询用户</span>
+    <div id="show" self="self">自定义属性</div>
+</div>
+
+<!-- 引入公共片段，~{templatename::selector}：模板名::选择器 -->
+<a th:replace="commons/index::#logout">退出登录</a>
+</body>
+
+
+<script th:inline="javascript">
+
+    function getUser() {
+        var age = $("#age").val();
+        $.ajax({
+            type: "post",
+            aysnc: false,
+            data: {
+                "age":age
+            },
+            url: basePath+"emp/findByAge",
+            dataType: "json",
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+                // 通常情况下textStatus 和 errorThown只有其中一个有值
+                console.log(XMLHttpRequest.status);
+                console.log(textStatus);
+                console.log(errorThrown);
+            },
+            success: function (data) {
+                var html = "";
+                if(data!=null){
+                    html +=  '<p>'+data.name+'，'+data.age+'</p>';
+                }
+            }
+        });
+    };
+
+    // onClick 是一个事件，是标注在标签上的，代表了标签的触发事件。而 click 是自定义的调用函数，方法。
+    $(".delete").click(function () {
+
+        // 获取当前标签的属性值
+        var data = $(this).attr("dele");
+        // 指定 action 的触发链接并提交
+        $("#deleteEmp").attr("action",data).submit();
+
+        // $("#deleteEmp").submit();
+
+        // 只有是 button 按钮时才需要加 false，是用于取消按钮的默认触发行为事件。并且按钮触发后会自动更新页面。
+        return false;
+    });
+
+</script>
+</html>

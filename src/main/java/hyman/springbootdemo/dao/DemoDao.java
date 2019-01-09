@@ -63,7 +63,7 @@ public class DemoDao<T> {
      *
      */
 
-    //@Resource(name = "sqlSessionTemplate")
+    @Resource(name = "sqlSessionTemplate")
     private transient SqlSessionTemplate sqlSessionTemplate;
 
     private Class<T> entityClass;

@@ -1,14 +1,12 @@
-package hyman.springbootdemo.util;
+package hyman.springbootdemo.config;
 
 import org.apache.ibatis.javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -16,8 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Spring Boot提供了一个默认的映射：/error，当处理中抛出异常之后，会转到该请求中处理，并且该请求有一个全局的错误页面用
- * 来展示异常内容。
- * 在实际应用中，系统的错误页面对用户来说并不够友好，我们通常需要去实现我们自己的异常提示。
+ * 来展示异常内容。默认 SpringBoot 就会去找到一个页面 error/状态码：
+ * 模板引擎可用的情况下会返回到 errorViewName 指定的视图地址，即引擎文件夹下的 error/状态码 页面。
+ * 模板引擎不可用时，就在静态资源文件夹下找 errorViewName 对应的页面 error/404.html。
+ *
+ * 在有精准匹配的页面时，就会返回与状态码对应的页面（如 404 对应 404 名称的页面）。如果没有对应的页面时就会根据状态码
+ * 找公共的页面（如 4 开头的状态码找 4xx 页面，5 开头的状态码找 5xx 页面）。当然这些是在没有自定义统一异常处理器时的流程。
+ *
+ * 在实际应用中，系统的错误页面对用户来说并不够友好，我们通常需要去实现我们自己的异常提示。所以 springboot 已经实现好了，直接
+ * 放置好页面就好，一般不需要自定义异常处理器。
  *
  * @ControllerAdvice 定义全局统一的异常处理类，而不是在每个Controller中逐个定义。
  * @ExceptionHandler 用来定义函数针对的异常类型（指定异常类型），最后将Exception对象和请求URL映射到error.html中。
@@ -25,22 +30,26 @@ import javax.servlet.http.HttpServletRequest;
  * 利用 @ControllerAdvice + @ExceptionHandler 组合处理Controller层RuntimeException异常
  * 当前的设置有问题，因为无论是系统错误，还是服务器错误都会跳转页面，以后解决。
  */
-@ControllerAdvice
+
+//@ControllerAdvice
 public class GlobalExceptionHandler {
 
-    public static final String DEFAULT_ERROR_VIEW = "errorSelf";
+    public static final String DEFAULT_ERROR_VIEW = "/errorSelf";
+    public static ModelAndView mav = new ModelAndView();
     public static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    static {
+        mav.setViewName(DEFAULT_ERROR_VIEW);
+    }
 
     //@ExceptionHandler(Exception.class)
-    //public String noFoundHandler2(HttpServletRequest request,Exception e){
+    //public ModelAndView noFoundHandler2(HttpServletRequest request,Exception e){
     //
-    //    request.setAttribute("msg",""+e.getMessage());
-    //    //request.setAttribute("exception",e);
-    //    request.setAttribute("url",""+request.getRequestURL());
-    //    request.setAttribute("test","测试页面");
+    //    mav.setAttribute("msg",""+e.getMessage());
+    //    mav.setAttribute("url",""+request.getRequestURL());
+    //    mav.setAttribute("test","测试页面");
     //    logger.error("======================================"+e.getMessage());
-    //    return DEFAULT_ERROR_VIEW;
+    //    return mav;
     //}
 
     /**
@@ -67,12 +76,17 @@ public class GlobalExceptionHandler {
          *         他的作用类似于 request对象的setAttribute方法的作用，用来在一个请求过程中传递处理的数据。
          *         即：addObject(String key,Object value);
          */
-
-        ModelAndView mav = new ModelAndView();
         mav.addObject("exception",e.getMessage());
         mav.addObject("url",request.getRequestURL());
-        mav.setViewName(DEFAULT_ERROR_VIEW);
+        logger.error("======================================"+e.getMessage());
         return mav;
+
+        // 不可以直接返回 string 页面，会被重定向。
+        //request.setAttribute("msg",""+e.getMessage());
+        ////request.setAttribute("exception",e);
+        //request.setAttribute("url",""+request.getRequestURL());
+        //logger.error("======================================"+e.getMessage());
+        //return DEFAULT_ERROR_VIEW;
     }
 
     /*
@@ -80,41 +94,42 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public String handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public ModelAndView handleHttpMessageNotReadableException(HttpServletRequest request,HttpMessageNotReadableException e) {
         logger.error("无法读取JSON...", e);
-        return DEFAULT_ERROR_VIEW;
+        mav.addObject("exception",e.getMessage());
+        mav.addObject("url",""+request.getRequestURL());
+        logger.error("======================================"+e.getMessage());
+        return mav;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String handleValidationException(MethodArgumentNotValidException e)
-    {
+    public ModelAndView handleValidationException(HttpServletRequest request,MethodArgumentNotValidException e) {
         logger.error("参数验证异常...", e);
-        return DEFAULT_ERROR_VIEW;
+        mav.addObject("exception",e.getMessage());
+        mav.addObject("url",""+request.getRequestURL());
+        logger.error("======================================"+e.getMessage());
+        return mav;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
-    public String noFoundHandler(HttpServletRequest request,Exception e){
+    public ModelAndView noFoundHandler(HttpServletRequest request,Exception e){
 
-        request.setAttribute("msg",""+e.getMessage());
-        //request.setAttribute("exception",e);
-        request.setAttribute("url",""+request.getRequestURL());
-        request.setAttribute("test","测试页面");
+        mav.addObject("exception",e.getMessage());
+        mav.addObject("url",""+request.getRequestURL());
         logger.error("======================================"+e.getMessage());
-        return DEFAULT_ERROR_VIEW;
+        return mav;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public String noFoundHandler1(HttpServletRequest request,Exception e){
+    public ModelAndView noFoundHandler1(HttpServletRequest request,Exception e){
 
-        request.setAttribute("msg",""+e.getMessage());
-        //request.setAttribute("exception",e);
-        request.setAttribute("url",""+request.getRequestURL());
-        request.setAttribute("test","测试页面");
+        mav.addObject("exception",e.getMessage());
+        mav.addObject("url",""+request.getRequestURL());
         logger.error("======================================"+e.getMessage());
-        return DEFAULT_ERROR_VIEW;
+        return mav;
     }
 
 }

@@ -20,42 +20,17 @@
         user-scalable：     是否可对页面进行缩放，no 禁止缩放
     -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <title>Title</title>
 </head>
 <body>
-<!--
-    Thymeleaf 默认的模板配置路径为：src/main/resources/templates，所以在其内部的文件夹内再使用该模板，则就需要加上下面的注解。
 
--->
-<!--/*@thymesVar id="test" type="java"*/-->
-<h1 th:text="${test}"></h1>
-<h1>html 文件夹</h1>
-<p>
-    <!--
-        /login，及 ?error，?logout 都是 security的默认路径，在不使用自定义的路径时都可用，
-        并且退出登录时，也必须使用 form 表单提交，否则不会生效。
+<!-- 抽取公共片段 -->
+<h3 th:fragment="topbar">
+    <a th:href="@{/security/login}">主页</a>
+    <a th:href="@{/emp/emps}" style="margin-left: 4%;">员工页面</a>
+</h3>
 
-        <a th:href="|@{/login?logout}|">退出系统的登录</a>
-        <a th:href="|@{/parselogin?logout=yes}|">退出自定义登录</a>
-    -->
-    <form id="f" action="#" th:action="@{/logout}" method="post">
-        <input type="submit" value="Logout" />
-        <a th:onclick="'javascript:quit()'">退出自定义登录</a>
-    </form>
-</p>
+<a th:href="@{/logout}" style="margin-left: 4%;" id="logout">退出登录</a>
 </body>
-<script th:inline="javascript">
-    <!--/*
-        thymeleaf 是不支持 jsp中的选择器的
-        $("#logout").onclick(function () {
-            f.submit();
-        });
-    */-->
-    function quit() {
-        console.log("111");
-        f.submit();
-    }
-</script>
+
 </html>

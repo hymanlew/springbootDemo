@@ -6,12 +6,17 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import java.util.Locale;
 
 
 /**
  * 该配置是整个程序的入口，由系统自动生成，不需要改动。
  *
- * SpringBootApplication，这个注解是一个组合注解，聚合了多个注解的功能：
+ * SpringBootApplication，这个注解是一个组合注解，聚合了多个注解的功能（它会自动扫描同目录及下级目录下的所有配置类）：
  *
  * @SpringBootConfiguration 注解，标注在某个类上，表示这是一个Spring Boot的配置类。
  * 		@Configuration 配置类上标注这个注解；即是将 spring 中的配置文件声明为配置类。配置类也就是容器中的一个组件，即@Component。
@@ -41,8 +46,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 //@ImportResource(locations = {"classpath:beans.xml"})
 @MapperScan(basePackages = "hyman.springbootdemo.dao")
-//@SpringBootApplication(scanBasePackages = {"hyman.springbootdemo.**","hyman.springbootdemo.util"})
-//@SpringBootApplication(scanBasePackages = {"hyman.springbootdemo.util"})
 @SpringBootApplication
 @EnableCaching
 @EnableTransactionManagement
@@ -51,4 +54,5 @@ public class SpringbootdemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootdemoApplication.class, args);
 	}
+
 }

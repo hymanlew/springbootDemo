@@ -8,12 +8,6 @@
     <meta content="text/html;charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!--
-        th:inline，文本内联，连接。
-        利用 thymeleaf消息表达式： #{...}访问属性文件的数据，主要用于国际化。
-        利用 thymeleaf超链接表达式： @{...}访问静态资源或动态资源。（th:src='@{...}'、th:href='@{...}'、th:action='@{...}'）
-    -->
     <title>安全登录</title>
 </head>
 
@@ -28,33 +22,48 @@
     var contexPath = /*[[@{/}]]*/ '';
     /*]]>*/
     console.log("base1: "+contexPath);
-
 </script>
 
+<!--/* thymeleaf注释语法，html 看不到，并且 thymeleaf 不会执行。 */-->
 <body>
-    <!--/* thymeleaf注释语法，html 看不到，并且 thymeleaf 不会执行。 */-->
+<!--/*
+    th:inline，文本内联，连接。[[ ]] 等于 th:text，[( )] 等于 th:utext，它们也可以实现文本内联（不需要与 inline 合用）。
+    利用 thymeleaf消息表达式： #{...}访问属性文件的数据，主要用于国际化。
+    利用 thymeleaf超链接表达式： @{...}访问静态资源或动态资源。（th:src='@{...}'、th:href='@{...}'、th:action='@{...}'）
+
+    th:if 的优先级是高于 text，href，src 等功能的，即如果 if 是在父级标注时，只有 if 条件为真时下级的标注才会生效。
+*/-->
 
     <!--/*@thymesVar id="error" type="java"*/-->
-    <div th:if="${error}">用户名或密码错！</div>
-    
+    <div th:text="${error}" th:if="${error}"></div>
+
     <!--/*@thymesVar id="logout" type="java"*/-->
-    <div th:if="${logout}">已退出登录！</div>
+    <div th:text="${logout}" th:if="${logout}"></div>
 
     <!--
     注意只能使用 post 请求，否则会一直重定向到根目录路径。
     并且该路径必须与 security 指定的方法保持一致（这个路径不重要，是显示在浏览器上的路径）。否则会 302 重定向，或 404。
     （它与 successHandler 有关）。
      -->
+    <h2 th:text="#{log.tip}">请登录</h2>
     <form th:action="@{/security}" method="post">
         <div>
-            <label>用户名：<input type="text" name="username" /></label>
+            <label th:text="#{log.name}">用户名：</label>
+            <input type="text" name="username" />
         </div>
         <div>
-            <label>密码：<input type="password" name="password" /></label>
+            <label th:text="#{log.pass}">密码：</label>
+            <input type="password" name="password" />
         </div>
-        <div><input type="submit" value="登录" /></div>
+        <div><input type="submit" value="登录" th:value="#{log.login}"></div>
     </form>
+    <hr />
+    <p>
+        <a style="margin-right: 4%;" th:href="@{/login(lang='zh_CN')}">中文</a>
+        <a th:href="@{/login(lang='en_US')}">English</a>
+    </p>
 
+    <hr />
     <!--/*-->
         <div>thymeleaf 未运行时可以在 html 中看到，运行后就消失! </div>
     <!--*/-->
@@ -63,18 +72,13 @@
         <div>运行后才会看到信息！</div>
     /*/-->
 
-    <button th:onclick="'javascript:goto()'">以根方式连接的网页</button>
-    <div th:onclick="'javascript:gohtml()'">以根方式连接的网页</div>
+    <button th:onclick="'javascript:goto()'">测试网页</button>
 </body>
 <script th:inline="javascript">
 
     function goto() {
         console.log("mark");
-        location.href = base+'do/index';
-    }
-
-    function gohtml() {
-        location.href = base+'html/index';
+        location.href = base+'test';
     }
 </script>
 </html>

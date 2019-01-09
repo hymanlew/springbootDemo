@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface UserService {
     List<User> findByAge(Integer age);
+
+    List<User> findAll();
+
+    User getById(Integer id);
 }

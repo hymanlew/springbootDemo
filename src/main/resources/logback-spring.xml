@@ -32,7 +32,7 @@
             </springProfile>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>TRACE</level>
+            <level>DEBUG</level>
         </filter>
 
         <!--

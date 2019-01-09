@@ -7,22 +7,12 @@
     <title>统一异常处理</title>
 </head>
 <body>
-<h1>访问异常！</h1>
 
-<!--/*@thymesVar id="url" type="java.lang.String"*/-->
-<div th:text="|url = ${url}|"></div>
-
-<!--/*@thymesVar id="msg" type="java.lang.String"*/-->
-<div th:text="|msg = ${msg}|"></div>
-
-<!--/*@thymesVar id="exception" type="java"*/-->
-<div th:text="|exception = ${exception}|"></div>
-
-<!--/*@thymesVar id="test" type="java"*/-->
-<div th:text="|test = ${test}|"></div>
-
+<h1>[[${status}]] 访问异常！</h1>
+<h4>1 = [[${error}]]</h4>
+<h4>2 = [[${message}]]</h4>
+<h4>3 = [[${errors}]]</h4>
 <div>=============标记==================</div>
-
 
 </body>
 </html>

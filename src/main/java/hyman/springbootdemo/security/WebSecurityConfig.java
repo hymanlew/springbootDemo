@@ -91,7 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 // 该路径必须与登录页面，控制器方法保持一致（它是显示在浏览器上的路径）。否则会 302 重定向，或 404。
                 .loginProcessingUrl("/security")
-                // 指定登录成功的连接，并带上数据
+                // 必须指定登录成功的连接，并带上数据。否则默认会到根目录
                 .successHandler(new SimpleUrlAuthenticationSuccessHandler("/security/login"))
 
                 //也可以不指定登录成功的页面路径，因为它是重定向，所以 request 中的数据就会没有了

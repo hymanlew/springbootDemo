@@ -5,11 +5,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.Date;
 
 /**
  * spring boot 的参数校验支持：
  * 在日常开发中，最基本的校验有判断是否为空，长度是否符合要求，通常会用 if-else 进行判断或者使用正则表达式，而在 spring boot 中可以使用
- * (@Validated User user, BindingResult bindingResult) 的方法更简单地解决。
+ * (@Valibirthd User user, BindingResult bindingResult) 的方法更简单地解决。
  *
  * 以下注解全是基于 hibernate 框架的。
  */
@@ -20,6 +21,8 @@ public class User {
     @NotEmpty(message="姓名不能为空！")
     private String name;
 
+    private Integer sex;
+
     @Max(value=100,message="年龄不能大于100岁")
     @Min(value=18,message="年龄必须满18岁")
     private Integer age;
@@ -28,6 +31,8 @@ public class User {
     @Length(min=6,message="密码长度不能小于6位")
     private String password;
 
+    private Date birth;
+
     public User() {
     }
 
@@ -35,6 +40,20 @@ public class User {
         this.id = id;
         this.name = name;
         this.password = password;
+    }
+
+    public User(Integer id,
+                @NotEmpty(message = "姓名不能为空！") String name,
+                Integer sex,
+                @Max(value = 100, message = "年龄不能大于100岁") @Min(value = 18, message = "年龄必须满18岁") Integer age,
+                @NotEmpty(message = "密码不能为空！") @Length(min = 6, message = "密码长度不能小于6位") String password,
+                Date birth) {
+        this.id = id;
+        this.name = name;
+        this.sex = sex;
+        this.age = age;
+        this.password = password;
+        this.birth = birth;
     }
 
     public Integer getId() {
@@ -53,6 +72,14 @@ public class User {
         this.name = name;
     }
 
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
     public Integer getAge() {
         return age;
     }
@@ -69,13 +96,23 @@ public class User {
         this.password = password;
     }
 
+    public Date getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Date birth) {
+        this.birth = birth;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", sex=" + sex +
                 ", age=" + age +
                 ", password='" + password + '\'' +
+                ", birth=" + birth +
                 '}';
     }
 }

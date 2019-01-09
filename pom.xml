@@ -58,11 +58,18 @@
 		</dependency>
 
         <!-- 引入jquery‐webjar 库，访问时只需要写webjars下面资源的名称即可，boot 专用。webjars：以jar包的方式引入静态资源 -->
+		<!-- 在页面中引用时，使用 th:href 或 th:src = @{webjark 内文件的路径} 即可 -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>3.3.1</version>
         </dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>layui</artifactId>
+			<version>2.4.5</version>
+		</dependency>
 
 		<!--
 			Thymeleaf [taɪm lif] 是一个XML/XHTML/HTML5模板引擎，可用于Web与非Web环境中的应用开发。它是一个开源的Java库，

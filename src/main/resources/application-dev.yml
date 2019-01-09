@@ -6,7 +6,7 @@ server:
     access_log_enabled: true
     basedir: target/tomcat
 
-
+# 开发期间模板引擎页面修改以后，要实时生效就要：1，禁用模板引擎的缓存。2，ctrl+f9：重新编译。
 spring:
   thymeleaf:
     enable: true
@@ -29,6 +29,9 @@ spring:
       password: hyman
       addresses: 127.0.0.1:5672
 
+# 指定全局日期解析的格式，默认是按照 / 的方式解析的。所以一般不用单独配置，应该直接在页面中说明。
+#  mvc:
+#    date-format: yyyy-MM-dd
 
 mybatis:
   # 指定全局配置文件位置

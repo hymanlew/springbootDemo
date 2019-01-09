@@ -4,13 +4,13 @@ import hyman.springbootdemo.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @Controller
 @RequestMapping
 public class MainController {
 
-    // 尽量不要使用根目录 /，因为如果表单提交时不使用 post 请求，系统就会一直重定向到根目录路径  spring boot 默认会先走根目录。
     @RequestMapping(value = {"/login"})
     public String gologin(){
         return "login";
@@ -19,8 +19,9 @@ public class MainController {
     @RequestMapping(value = {"/security/login"})
     public String login2(Map<String,Object> map){
 
-        map.put("test","登录成功！");
+        map.put("test","<h3>测试特殊字符解析！</h3>");
         map.put("user",new User(1,"hyman","123"));
+        map.put("list", Arrays.asList("遍历-A","遍历-B","遍历-C","遍历-D"));
         return "index";
     }
 
@@ -38,18 +39,11 @@ public class MainController {
         //return "redirect:/login";
 
         if(logout!=null && logout!=""){
-            map.put("logout","退出登录！");
+            map.put("logout","已退出登录！");
         }
         if(error!=null && error!=""){
-            map.put("error","登录失败！");
+            map.put("error","用户名或密码错！");
         }
         return "login";
     }
-
-
-
-    //@RequestMapping("/error")
-    //public String goerror(){
-    //    return "errorSelf";
-    //}
 }

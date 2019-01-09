@@ -5,11 +5,11 @@
     <meta content="text/html;charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <!--
         引用静态资源文件，比如CSS和JS文件，语法格式为“@{}”，如@{/js/blog/blog.js}会引入/static目录下的/js/blog/blog.js文件
         如果是要从根目录开始找的资源，则路径就必须以 / 根开关，否则就会从当前目录下开始访问。
     -->
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
     <title>Title</title>
 </head>
 <script type="text/javascript" th:inline="javascript">
@@ -22,69 +22,42 @@
     springboot 不推荐使用 jsp，首先是其本身对 jsp 的支持就不是很理想，不是很兼容。再者 jsp页面并不能很好的实现前后端分离，
     主要是不利用前端进行独立显示，和开发。
 
-    th:text 使用 |xxx| 拼接字符串，否则会解析失败。并且如果当传递有数据时，就显示数据，则后面的 welcome 就不显示了，即替换掉。
-    即原有的值只是为了给前端开发时做展示用的.这样的话很好的做到了前后端分离.
+    th:text 使用 |xxx| 拼接字符串，否则会解析失败。也可以使用 th:inline="text" 方法。
+    th:text 用于当传递有数据时，就显示数据，并替换掉原有的数据。即原有的值只是为了给前端开发时做展示用的。这样很好的做到了前后端分离.
 
-    th：任意html属性；作用是替换原生属性的值。
+    th：任意html属性；作用是替换原生属性的值。下面的红线是 IDEA 的提示，不用管。
+
+    其中，[[ ]] 等于 th:text，[( )] 等于 th:utext，它们是可以单独使用的（不需要与 inline 合用）。
 */-->
 
 <h1 th:inline="text">当前登录的用户是： [[${#httpServletRequest.remoteUser}]]，welcome!</h1>
+<h2>[[${session.user}]]，登录成功！</h2>
+<div th:utext="${test}">被替换的信息，但不转义特殊字符，即原样输出</div>
 <div th:id="${test}" th:class="${test}" th:text="${test}">被替换的信息，并转义特殊字符</div>
-<div th:utext="${test}">被替换的信息，但不转义特殊字符</div>
+<hr />
 
-<!--<p>test：<span th:text="${user.name}">admin</span></p>-->
-<!--<div th:object="${user}">-->
-    <!--<p>name：<span th:text="*{name}">admin</span></p>-->
-    <!--<p>pass：<span th:text="*{password}">admin</span></p>-->
-<!--</div>-->
-
-<!--<div th:object="${session.user}">-->
-    <!--<p>Name: <span th:text="*{name}">Sebastian</span>.</p>-->
-    <!--<p>Surname: <span th:text="*{password}">Pepper</span>.</p>-->
-<!--</div>-->
-
+<div th:object="${user}">
+    <p>name：<span th:text="*{name}">admin</span>，pass：<span th:text="*{password}">admin</span></p>
+</div>
+<!-- th:each 每次遍历都会生成一次当前元素的标签，当然也可以把这两个功能放到一个标签上 -->
+<div th:each="lis:${list}">
+    <p th:text="${lis}">遍历数据</p>
+</div>
+<p th:each="lis:${list}" th:text="${lis}">遍历数据</p>
+<hr />
 
 <p>
     <!-- 此处不能使用 js 定义的根目录，只能使用 / 路径了 -->
-    <a th:href="@{/html/index.html}">去 Html 的页面</a>
-
-    <!-- /login 为 security的路径 -->
-    <a th:href="@{/dologin}">去登录页面</a>
-
+    <a th:onclick="'javascript:gohtml()'">JS 去自定义异常页面</a>
+    <a th:href="@{/emp/emps}" style="margin-left: 4%;">员工页面</a>
+    <a th:replace="commons/index::#logout">退出登录</a>
 </p>
-<div>
-    <p th:onclick="'javascript:gohtml()'">去内部 html页面</p>
-</div>
 
-<div>
-    <p th:onclick="'javascript:getUser()'">查询用户</p>
-    <input type="text" id="age" placeholder="输入年龄">
-    <div id="show"></div>
-</div>
-<div>标记1</div>
 
 <script>
-    function gohtml() {
-        location.href = basePath +"html/index";
-    }
 
-    function getUser() {
-        var age = $("#age").val();
-        $.ajax({
-            type: post,
-            aysnc: false,
-            data: {
-                "age":age
-            },
-            url: basePath+"user/findByAge",
-            dataType: "json",
-            success: function (data) {
-                var html = "";
-                if(data!=null){
-                    html +=  '<p>'+data.name+'，'+data.age+'</p>';
-                }
-            }
-        });
+    function gohtml() {
+        location.href = basePath +"html/error";
     }
 
 </script>
