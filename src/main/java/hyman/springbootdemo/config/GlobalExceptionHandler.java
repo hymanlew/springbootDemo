@@ -11,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Spring Boot提供了一个默认的映射：/error，当处理中抛出异常之后，会转到该请求中处理，并且该请求有一个全局的错误页面用
@@ -31,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
  * 当前的设置有问题，因为无论是系统错误，还是服务器错误都会跳转页面，以后解决。
  */
 
-//@ControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     public static final String DEFAULT_ERROR_VIEW = "/errorSelf";
@@ -42,6 +44,7 @@ public class GlobalExceptionHandler {
         mav.setViewName(DEFAULT_ERROR_VIEW);
     }
 
+    // 通用捕获异常的业务
     //@ExceptionHandler(Exception.class)
     //public ModelAndView noFoundHandler2(HttpServletRequest request,Exception e){
     //
@@ -90,26 +93,47 @@ public class GlobalExceptionHandler {
     }
 
     /*
-     *  400-Bad Request
+     *  400-Bad Request，响应 json 格式数据（浏览器，客户端都会返回 json）
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ModelAndView handleHttpMessageNotReadableException(HttpServletRequest request,HttpMessageNotReadableException e) {
-        logger.error("无法读取JSON...", e);
-        mav.addObject("exception",e.getMessage());
-        mav.addObject("url",""+request.getRequestURL());
+    @ResponseBody
+    public Map<String,Object> handleHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException e) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("exception",e.getMessage());
+        map.put("url",""+request.getRequestURL());
         logger.error("======================================"+e.getMessage());
-        return mav;
+        return map;
     }
 
+    /**
+     * 转发到系统默认路径 /error 进行自适应响应效果处理（页面或者 json数据）。但是以下代码返回的页面或 json数据还是系统默认的。所以如果要将我
+     * 们的定制数据携带出去就需要自定义一些组件：
+     *
+     * 1，在出现错误以后，系统会来到 /error 请求，会被BasicErrorController处理，响应出去可以获取的数据是由 getErrorAttributes 得到的（它是
+     *    AbstractErrorController（ErrorController）规定的方法）。所以可以自定义一个 ErrorController 的实现类（或者是 AbstractErrorController
+     *    的子类），放在容器中。但是这种方式太麻烦。
+     *
+     * 2，页面上，或者是 json返回能用的数据都是通过 errorAttributes.getErrorAttributes 得到的，是容器中 DefaultErrorAttributes.getErrorAttributes()
+     *    进行数据处理的。所以可以自定义一个 DefaultErrorAttributes 的实现类。
+     *
+     自定义ErrorAttributes
+
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ModelAndView handleValidationException(HttpServletRequest request,MethodArgumentNotValidException e) {
-        logger.error("参数验证异常...", e);
-        mav.addObject("exception",e.getMessage());
-        mav.addObject("url",""+request.getRequestURL());
+    public String handleValidationException(HttpServletRequest request,MethodArgumentNotValidException e) {
+
+        //传入我们自己的错误状态码 4xx 5xx，否则就不会进入定制错误页面的解析流程
+        request.setAttribute("javax.servlet.error.status_code",500);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("exception",e.getMessage());
+        map.put("url",""+request.getRequestURL());
         logger.error("======================================"+e.getMessage());
-        return mav;
+
+        //转发到/error
+        return "forward:/error";
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

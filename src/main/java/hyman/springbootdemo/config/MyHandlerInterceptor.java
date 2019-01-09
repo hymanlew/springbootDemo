@@ -37,6 +37,16 @@ public class MyHandlerInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        // 通过所有的客户端请求
+        String uri = request.getRequestURI();
+        boolean client = false;
+        if(uri.contains("client") || uri.contains("error")){
+            client = true;
+            return true;
+        }
+        if(client){
+            return true;
+        }
         // 因为如果没有登录时，security 框架就会自动拦截，是走的内部拦截器。所以这里只需要获取当前登录成功的用户名，也不用判断是否为空。
         Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String name = ((org.springframework.security.core.userdetails.User)user).getUsername();

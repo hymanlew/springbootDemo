@@ -27,7 +27,7 @@ public class MyMVCconfig implements WebMvcConfigurer{
          *
          * 所以这里只是演示一下自定义视图器的功能。
          */
-        registry.addViewController("/error/**").setViewName("/error/**");
+        //registry.addViewController("/error/**").setViewName("/error/**");
     }
 
     // 自定义区域信息解析器，显示语言

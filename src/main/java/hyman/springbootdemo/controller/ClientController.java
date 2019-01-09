@@ -9,16 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/test")
-public class ThymeController {
+@RequestMapping("/client")
+public class ClientController {
 
-    @RequestMapping
+    @RequestMapping("html")
     public String test(HttpServletRequest request){
-        request.setAttribute("test","hello man");
-        // return模板文件的名称，对应 src/main/resources/templates/index.html
-        return "index";
+        return "error/404";
     }
-
 
 
 }
