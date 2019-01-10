@@ -55,7 +55,22 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<!-- 在引入其他内置 server 容器时，要排除spring-boot-starter-tomcat -->
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<artifactId>spring‐boot‐starter‐tomcat</artifactId>-->
+					<!--<groupId>org.springframework.boot</groupId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
 		</dependency>
+
+		<!-- 引入其他的Servlet容器 -->
+		<!--<dependency>-->
+			<!--<artifactId>spring‐boot‐starter‐jetty</artifactId>-->
+			<!--<artifactId>spring‐boot‐starter‐undertow</artifactId>-->
+			<!--<groupId>org.springframework.boot</groupId>-->
+		<!--</dependency>-->
+
 
         <!-- 引入jquery‐webjar 库，访问时只需要写webjars下面资源的名称即可，boot 专用。webjars：以jar包的方式引入静态资源 -->
 		<!-- 在页面中引用时，使用 th:href 或 th:src = @{webjark 内文件的路径} 即可 -->

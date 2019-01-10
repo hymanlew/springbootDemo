@@ -5,6 +5,9 @@ server:
   tomcat:
     access_log_enabled: true
     basedir: target/tomcat
+    uri-encoding: UTF-8
+  servlet:
+    context-path: '/'
 
 # 开发期间模板引擎页面修改以后，要实时生效就要：1，禁用模板引擎的缓存。2，ctrl+f9：重新编译。
 spring:

@@ -116,9 +116,6 @@ public class GlobalExceptionHandler {
      *
      * 2，页面上，或者是 json返回能用的数据都是通过 errorAttributes.getErrorAttributes 得到的，是容器中 DefaultErrorAttributes.getErrorAttributes()
      *    进行数据处理的。所以可以自定义一个 DefaultErrorAttributes 的实现类。
-     *
-     自定义ErrorAttributes
-
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
