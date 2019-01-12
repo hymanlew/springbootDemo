@@ -19,7 +19,7 @@ public class User {
     private Integer id;
 
     @NotEmpty(message="姓名不能为空！")
-    private String name;
+    private String Name;
 
     private Integer sex;
 
@@ -29,7 +29,7 @@ public class User {
 
     @NotEmpty(message="密码不能为空！")
     @Length(min=6,message="密码长度不能小于6位")
-    private String password;
+    private String Pass_word;
 
     private Date birth;
 
@@ -38,8 +38,8 @@ public class User {
 
     public User(Integer id,String name, String password) {
         this.id = id;
-        this.name = name;
-        this.password = password;
+        this.Name = name;
+        this.Pass_word = password;
     }
 
     public User(Integer id,
@@ -49,10 +49,10 @@ public class User {
                 @NotEmpty(message = "密码不能为空！") @Length(min = 6, message = "密码长度不能小于6位") String password,
                 Date birth) {
         this.id = id;
-        this.name = name;
+        this.Name = name;
         this.sex = sex;
         this.age = age;
-        this.password = password;
+        this.Pass_word = password;
         this.birth = birth;
     }
 
@@ -65,11 +65,11 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.Name = name;
     }
 
     public Integer getSex() {
@@ -89,11 +89,11 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return Pass_word;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.Pass_word = password;
     }
 
     public Date getBirth() {
@@ -108,10 +108,10 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + Name + '\'' +
                 ", sex=" + sex +
                 ", age=" + age +
-                ", password='" + password + '\'' +
+                ", password='" + Pass_word + '\'' +
                 ", birth=" + birth +
                 '}';
     }

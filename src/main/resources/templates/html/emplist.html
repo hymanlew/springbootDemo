@@ -91,9 +91,10 @@
 </form>
 
 
-<div>
-    <input type="text" id="age" placeholder="输入年龄"><span th:onclick="'javascript:getUser()'">查询用户</span>
-    <div id="show" self="self">自定义属性</div>
+<div style="margin-top: 3%;">
+    <input type="text" id="name" placeholder="输入姓名"><span th:onclick="'javascript:getUser()'">查询用户</span>
+    <span id="show" self="self">自定义属性</span>
+    <a th:href="@{/emp/findByLimit/1/5}">查询并统计</a>
 </div>
 
 <!-- 引入公共片段，~{templatename::selector}：模板名::选择器 -->
@@ -104,14 +105,14 @@
 <script th:inline="javascript">
 
     function getUser() {
-        var age = $("#age").val();
+        var name = $("#name").val();
         $.ajax({
             type: "post",
             aysnc: false,
             data: {
-                "age":age
+                "name":name
             },
-            url: basePath+"emp/findByAge",
+            url: basePath+"emp/findByName",
             dataType: "json",
             error : function(XMLHttpRequest, textStatus, errorThrown) {
 

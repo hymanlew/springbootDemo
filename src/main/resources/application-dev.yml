@@ -36,11 +36,18 @@ spring:
 #  mvc:
 #    date-format: yyyy-MM-dd
 
+# mybatis 自动配置了 sqlsessionfactory，并且它只对应于接口文件（接口上声明持久层注解），接口不能有实现类，就算有也不会执行。
 mybatis:
   # 指定全局配置文件位置
   config-location: classpath:mybatis-config.xml
   # 指定sql映射文件位置
   mapper-locations: classpath:mapper/*.xml
+
+  # 将表字段与实体类属性进行映射，这一句是老的声明，在新系统中已经废弃不能再使用。否则整个系统都会无法启动。并且 mapper 中的命
+  # 名空间必须是全类名的，
+#  configuration:
+#    map-underscore-to-camel-case: true
+
 
 logging:
   path: classpath:/logback-spring.xml

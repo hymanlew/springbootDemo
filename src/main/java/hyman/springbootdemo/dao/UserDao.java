@@ -12,41 +12,25 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 做为在 service中调用的 dao层，但实际工作的是其父类或是父接口
- * 这样是为了体现高可用（或者是适配器模式）
+ * springboot mybatis 中 使用 xml 映射文件执行 sql 时，只需提供一个接口即可。使用 @MapperScan 或者 @Mapper 将其扫描到容器中。
+ *
  */
 @Repository("userDao")
-public class UserDao extends DemoDao<User>{
+public interface UserDao extends DemoDao<User>{
 
-    /**
-     * Spring的 JdbcTemplate是自动配置的，你可以直接使用 @Autowired 来注入到你自己的bean中来使用。是底层方法。
-     * 它是一种基本的数据访问方式（底层），结合构建 RESTful API 和使用 Thymeleaf 模板引擎渲染 Web视图的内容就已经可以完成
-     * App服务端和 Web站点的开发任务了。
-     */
-    @Resource
-    private JdbcTemplate jdbcTemplate;
+    //public List<User> findAll() {
+    //    List<User> list = new ArrayList<>();
+    //    list.add(new User(1,"E-AA",1,25,"aa@163.com",new Date()));
+    //    list.add(new User(2, "E-BB", 1,30,"bb@163.com",   new Date()));
+    //    list.add((new User(3, "E-CC", 0, 26,"cc@163.com",  new Date())));
+    //    list.add((new User(4,"E-DD",  0, 28, "dd@163.com", new Date())));
+    //    list.add((new User(5,"E-EE", 1,29, "ee@163.com",  new Date())));
+    //    return list;
+    //}
+    //
+    //public User getById(Integer id) {
+    //return new User(1,"E-AA",1,25,"aa@163.com",new Date());
+    //}
 
-    /*
-     * 如果父级全是 interface接口类型，而且接口实现也是继承关系时，即 service接口及其实现，dao接口及其实现，otherdao接口
-     * 及其实现全部是实现的继承关系，则在调用总接口的公共方法时，特别要注意记得，设置父类 dao接口指向当前 dao接口，否则会
-     * 无法调用顶级父类的公共方法。
-     * 即适配器模式。
-     */
-
-    @Resource(name="sqlSessionTemplate")
-    private transient SqlSessionTemplate sqlSessionTemplate;
-
-    public List<User> findAll() {
-        List<User> list = new ArrayList<>();
-        list.add(new User(1,"E-AA",1,25,"aa@163.com",new Date()));
-        list.add(new User(2, "E-BB", 1,30,"bb@163.com",   new Date()));
-        list.add((new User(3, "E-CC", 0, 26,"cc@163.com",  new Date())));
-        list.add((new User(4,"E-DD",  0, 28, "dd@163.com", new Date())));
-        list.add((new User(5,"E-EE", 1,29, "ee@163.com",  new Date())));
-        return list;
-    }
-
-    public User getById(Integer id) {
-        return new User(1,"E-AA",1,25,"aa@163.com",new Date());
-    }
+    List<User> findByName(String name);
 }

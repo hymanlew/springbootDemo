@@ -20,12 +20,20 @@
     <!-- 日志最大的历史 365天 -->
     <property name="maxHistory" value="365" />
 
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+
     <!-- ch.qos.logback.core.ConsoleAppender 表示控制台输出 -->
     <appender name="inLine" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <!-- springProfile 标签可以指定某段配置只在某个环境下生效 -->
             <springProfile name="dev">
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ---> [%thread] ---> %-5level %logger{50} - %msg%n</pattern>
+                <charset>utf8</charset>
             </springProfile>
             <springProfile name="!dev">
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [%thread] ==== %-5level %logger{50} - %msg%n</pattern>
@@ -118,15 +126,15 @@
             false：表示只用当前logger的appender-ref。
             true： 表示当前logger的appender-ref和rootLogger的appender-ref都有效
    -->
-    <logger name="org.springframework" level="INFO" additivity="false"/>
-    <logger name="com.hyman.util" level="TRACE"/>
-    <logger name="debug" level="DEBUG"/>
+    <logger name="org.springframework" level="DEBUG" additivity="false"/>
+    <logger name="hyman.springbootdemo" level="DEBUG" />
+    <logger name="debug" level="DEBUG" additivity="false"/>
 
     <!--
        root与logger是父子关系，没有特别定义则默认为root，任何一个类只会和一个logger对应，
        要么是定义的logger，要么是root，判断的关键在于找到这个logger，然后判断这个logger的appender和level。
     -->
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="inLine"/>
         <appender-ref ref="file"/>
     </root>

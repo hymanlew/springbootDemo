@@ -23,9 +23,10 @@ public class EmpController {
     @Resource
     private UserService userService;
 
-    @GetMapping("/findByAge{age}")
-    public List<User> findByAge(Integer age) {
-        return userService.findByAge(age);
+    @PostMapping("/findByName")
+    public List<User> findByName(String name) {
+        List<User> list = userService.findByName(name);
+        return list;
     }
 
     @GetMapping("/emps")
@@ -65,6 +66,15 @@ public class EmpController {
         Logutil.logger.info("=== 用 ID 删除工人："+id);
 
         return "redirect:/emp/emps";
+    }
+
+    @GetMapping("/findByLimit/{count}/{size}")
+    public String findByLimit(Map<String,Object> map,@PathVariable Integer count,@PathVariable Integer size){
+        List<User> list = userService.selectAndCount(count,size);
+        map.put("emps",list.get(0));
+        Logutil.logger.info("=== 统计工人："+list.get(1));
+
+        return "html/emplist";
     }
 
 }
