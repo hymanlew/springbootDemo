@@ -77,6 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 主页，或登录页面不设限制
                 .antMatchers("/login").permitAll()
                 .antMatchers("/client/**").permitAll()
+                .antMatchers("/druid/**").permitAll()
                 //.antMatchers("/security/**").access("hasRole('ADMIN') and hasRole('USER')")
                 .antMatchers("/security/**").hasAnyRole("ADMIN")
                 .antMatchers("/demo/**").hasAnyRole("ADMIN")

@@ -2,6 +2,7 @@ package hyman.springbootdemo.dao;
 
 import hyman.springbootdemo.entity.User;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,14 @@ import java.util.List;
  */
 @Repository("userDao")
 public class UserDao extends DemoDao<User>{
+
+    /**
+     * Spring的 JdbcTemplate是自动配置的，你可以直接使用 @Autowired 来注入到你自己的bean中来使用。是底层方法。
+     * 它是一种基本的数据访问方式（底层），结合构建 RESTful API 和使用 Thymeleaf 模板引擎渲染 Web视图的内容就已经可以完成
+     * App服务端和 Web站点的开发任务了。
+     */
+    @Resource
+    private JdbcTemplate jdbcTemplate;
 
     /*
      * 如果父级全是 interface接口类型，而且接口实现也是继承关系时，即 service接口及其实现，dao接口及其实现，otherdao接口
