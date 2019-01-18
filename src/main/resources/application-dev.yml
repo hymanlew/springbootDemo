@@ -1,5 +1,4 @@
 
-
 server:
   port: 8888
   tomcat:
@@ -12,7 +11,7 @@ server:
 # 开发期间模板引擎页面修改以后，要实时生效就要：1，禁用模板引擎的缓存。2，ctrl+f9：重新编译。
 spring:
   thymeleaf:
-    enable: true
+    enabled: true
     mode: HTML
     encoding: UTF-8
     cache: false
@@ -42,11 +41,6 @@ mybatis:
   config-location: classpath:mybatis-config.xml
   # 指定sql映射文件位置
   mapper-locations: classpath:mapper/*.xml
-
-  # 将表字段与实体类属性进行映射，这一句是老的声明，在新系统中已经废弃不能再使用。否则整个系统都会无法启动。并且 mapper 中的命
-  # 名空间必须是全类名的，
-#  configuration:
-#    map-underscore-to-camel-case: true
 
 
 logging:

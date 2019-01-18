@@ -47,7 +47,8 @@ public class SpringbootdemoApplicationTests {
 
     @Test
     public void t2(){
-        // 只有使用 @ImportResource 注解导入后才能拿到 bean。但是这种方式是老的，建议使用 configuration bean 注解的方式。
+        // 只有使用 @ImportResource(locations = {"classpath:beans.xml"}) 注解导入后才能拿到 bean。但是这种方式是老的，建议使用
+        // configuration bean 注解的方式。
         boolean flag = ioc.containsBean("testImport");
         System.out.println("===== "+flag);
     }

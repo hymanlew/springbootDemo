@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.3.RELEASE</version>
+		<version>2.1.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -31,9 +31,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
-		<!--布局功能的支持程序 thymeleaf3主程序 layout2以上版本，切换thymeleaf版本-->
-		<thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
+		<!--布局功能的支持程序 thymeleaf3主程序 layout2以上版本，切换thymeleaf版本，一定要与主程序版本一致-->
+		<!--<thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>-->
 	</properties>
 
 
@@ -166,17 +165,16 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- rabbitmq java client -->
+		<!-- rabbitmq java client，最好不要手动导入其他版本，会与主程序不兼容 -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
-			<version>5.5.1</version>
+			<!--<version>5.5.1</version>-->
 		</dependency>
 		<!-- Spring整合RabbitMQ -->
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit</artifactId>
-			<version>2.0.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -248,6 +246,15 @@
 			<artifactId>gson</artifactId>
 			<!-- 必须与 boot 的版本兼容，否则会有冲突，无法启动 -->
 		</dependency>
+
+		<!--
+		 J2EE 统一缓存标准 JSR107：
+		 但并不是所有的缓存组件（系统）都实现了 JSR107 的实现，所以它使用的很少。springboot 提供了自己的缓存抽象，原理与 JSR107 一样。
+		 -->
+		<!--<dependency>-->
+			<!--<groupId>javax.cache</groupId>-->
+			<!--<artifactId>cache-api</artifactId>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>com.alibaba</groupId>

@@ -14,9 +14,10 @@ import java.util.HashMap;
 @Configuration
 public class BootProducerConfig {
 
-    @Bean
-    public Exchange exchange(){
-        return new TopicExchange("bootexchange",true,false,new HashMap<>());
-    }
+    // 由于该 demo 试例是在同一系统上的，而同一系统中同一 bean 对象不能声明两次，否则会无法启动。所以这里先注释掉。
+    //@Bean
+    //public Exchange exchange(){
+    //    return new TopicExchange("bootexchange",true,false,new HashMap<>());
+    //}
 
 }
