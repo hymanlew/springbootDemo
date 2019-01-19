@@ -13,4 +13,8 @@ public interface UserService {
     List<User> findByName(String name);
 
     List<User> selectAndCount(Integer count, Integer size);
+
+    User update(User user);
+
+    void delete(Integer id);
 }

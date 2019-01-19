@@ -24,6 +24,7 @@ public class EmpController {
     private UserService userService;
 
     @PostMapping("/findByName")
+    @ResponseBody
     public List<User> findByName(String name) {
         List<User> list = userService.findByName(name);
         return list;
@@ -56,6 +57,7 @@ public class EmpController {
     public String updateEmp(Map<String,Object> map,User user){
         Logutil.logger.info("=== 修改工人信息："+user.toString());
 
+        userService.update(user);
         // 在这里必须使用 redirect 重定向，因为两个方法的请求方式不同（GET，POST）。如果是同一种请求方式，则应该使用 forward。
         //return "forward:/emp/emps";
         return "redirect:/emp/emps";
@@ -65,6 +67,7 @@ public class EmpController {
     public String deleteById(@PathVariable Integer id){
         Logutil.logger.info("=== 用 ID 删除工人："+id);
 
+        userService.delete(id);
         return "redirect:/emp/emps";
     }
 
@@ -72,9 +75,10 @@ public class EmpController {
     public String findByLimit(Map<String,Object> map,@PathVariable Integer count,@PathVariable Integer size){
         List<User> list = userService.selectAndCount(count,size);
         map.put("emps",list.get(0));
+        map.put("count",list.get(1));
         Logutil.logger.info("=== 统计工人："+list.get(1));
 
-        return "html/emplist";
+            return "html/emplist";
     }
 
 }

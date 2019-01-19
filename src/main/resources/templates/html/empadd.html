@@ -20,15 +20,32 @@
         user-scalable：     是否可对页面进行缩放，no 禁止缩放
     -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/webjars/layui/2.4.5/css/layui.css}" media="all">
+
     <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/layui/2.4.5/layui.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <title>Title</title>
+    <style>
+        h3 {
+            display: block;
+            -webkit-margin-before: 1em;
+            -webkit-margin-after: 1em;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
 </head>
 <body>
+
 <div th:replace="commons/index::topbar"></div>
+<p class="layui-elem-quote">以下是原生的格式，所以使用 layui 的格式。</p>
+
 
 <!--需要区分是员工修改还是添加；-->
-<form th:action="@{/emp/addEmp}" method="post">
+<form th:action="@{/emp/addEmp}" method="post" id="submit">
     <!--发送 put 请求修改员工数据-->
     <!--
     1、页面创建一个post表单（即现有表单）
@@ -40,22 +57,25 @@
     <input type="hidden" name="id" th:if="${emp!=null}" th:value="${emp.id}">
     <div>
         <label>姓名</label>
-        <input name="name" type="text" placeholder="zhangsan" th:value="${emp!=null}?${emp.name}">
+        <input name="name" type="text" placeholder="zhangsan" th:value="${emp!=null}?${emp.name}" required lay-verify="required">
     </div>
     <div>
         <label>密码</label>
-        <input name="password" type="text" placeholder="zhangsan@atguigu.com" th:value="${emp!=null}?${emp.password}">
+        <input name="password" type="text" placeholder="zhangsan@atguigu.com" th:value="${emp!=null}?${emp.password}" required lay-verify="required">
     </div>
     <div>
         <label>性别</label><br/>
         <div>
-            <input type="radio" name="sex" value="1" th:checked="${emp!=null}?${emp.sex==1}">
+            <!--<input type="radio" name="sex" value="1" th:checked="${emp!=null}?${emp.sex==1}">-->
+            <input type="radio" name="sex" value="1" th:checked="${emp!=null && (emp.sex==null || emp.sex==1)?true:false}">
+            <!--<input type="radio" name="sex" value="1" th:attr ="checked=${emp!=null && emp.sex==null?true:false}">-->
             <label>男</label>
         </div>
         <div>
-            <input type="radio" name="sex" value="0" th:checked="${emp!=null}?${emp.sex==0}">
+            <input type="radio" name="sex" value="0" th:checked="${emp!=null}?${emp.sex==0}" required>
             <label>女</label>
         </div>
+        <input type="text" name="sex" th:value="${emp!=null && emp.sex==null?'true':'false'}">
     </div>
     <div>
         <label>年龄</label>
@@ -73,11 +93,55 @@
 
         -->
         <label>出生日期</label>
-        <input name="birth" type="text" placeholder="zhangsan" th:value="${emp!=null}?${#dates.format(emp.birth, 'yyyy/MM/dd')}">
+        <input name="birth" id="birth" type="text" placeholder="2018/01/01" th:value="${emp!=null}?${#dates.format(emp.birth, 'yyyy/MM/dd')}" required lay-verify="date">
     </div>
-    <button type="submit" th:text="${emp!=null}?'修改':'添加'">添加</button>
+    <button type="submit" th:text="${emp!=null}?'修改':'添加'" lay-submit lay-filter="form">添加</button>
 </form>
+<br>===========================================================================
+<br>===========================================================================
 
+<form class="layui-form" th:action="@{/emp/addEmp}" method="post" id="submit1" lay-filter="example">
+    <input type="hidden" name="_method" value="put" th:if="${emp!=null}"/>
+    <input type="hidden" name="id" th:if="${emp!=null}" th:value="${emp.id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" autocomplete="off" placeholder="zhangsan" class="layui-input" th:value="${emp!=null}?${emp.name}" required lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码框</label>
+        <div class="layui-input-block">
+            <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input" th:value="${emp!=null}?${emp.password}" required lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-block">
+            <!--<input type="radio" name="sex" value="1" title="男" th:checked="${emp!=null}?${emp.sex==1}">-->
+            <input type="radio" name="sex" value="1" title="男" th:checked="${emp!=null && (emp.sex==null || emp.sex==1)?true:false}">
+            <input type="radio" name="sex" value="0" title="女" th:checked="${emp!=null}?${emp.sex==0}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">年龄</label>
+        <div class="layui-input-block">
+            <input type="text" name="age" placeholder="年龄" autocomplete="off" class="layui-input" th:value="${emp!=null}?${emp.age}" required lay-verify="number">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">出生日期</label>
+        <div class="layui-input-block">
+            <input type="text" id="birth2" name="birth" placeholder="2018/01/01" autocomplete="off" class="layui-input" th:value="${emp!=null}?${#dates.format(emp.birth, 'yyyy/MM/dd')}" required lay-verify="date">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="form">立即提交</button>
+        </div>
+    </div>
+</form>
 
 <p>
     <!--
@@ -93,16 +157,42 @@
     </form>
 </p>
 </body>
+
 <script th:inline="javascript">
-    <!--/*
-        thymeleaf 是不支持 jsp中的选择器的
-        $("#logout").onclick(function () {
-            f.submit();
+    var form;
+    layui.use(['laydate', 'form','element'], function () {
+        var laydate = layui.laydate;
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+        form = layui.form;
+
+        laydate.render({
+            elem: '#birth' //指定元素
+            , type: 'date'
         });
-    */-->
+        laydate.render({
+            elem: '#birth2' //指定元素
+            , type: 'date'
+        });
+
+        //监听提交
+        form.on('submit(form)', function (data) {
+            // var card = $("input[name='birth']").val();
+            // if(!card){
+            //     layer.alert("出生日期不能为空！");
+            //     return false;
+            // }
+            $("#submit1").submit();
+        });
+    });
+
     function quit() {
         console.log("111");
         f.submit();
     }
+
+    // $("#logout").onclick(function () {
+    //     f.submit();
+    // });
+
 </script>
 </html>

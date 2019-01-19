@@ -92,11 +92,14 @@
 
 
 <div style="margin-top: 3%;">
-    <input type="text" id="name" placeholder="输入姓名"><span th:onclick="'javascript:getUser()'">查询用户</span>
-    <span id="show" self="self">自定义属性</span>
-    <a th:href="@{/emp/findByLimit/1/5}">查询并统计</a>
+    <input type="text" id="name" placeholder="输入姓名"><button th:onclick="'javascript:getUser()'">查询用户</button>
+    <a th:href="@{/emp/findByLimit/1/5}" style="margin-left: 23px;">查询并统计</a><span>[[${count}]]</span>
 </div>
 
+<div style="margin-top: 3%;" id="selectEmps">
+</div>
+
+<span id="show" self="self">自定义属性</span>
 <!-- 引入公共片段，~{templatename::selector}：模板名::选择器 -->
 <a th:replace="commons/index::#logout">退出登录</a>
 </body>
@@ -112,7 +115,7 @@
             data: {
                 "name":name
             },
-            url: basePath+"emp/findByName",
+            url: basePath+"/emp/findByName",
             dataType: "json",
             error : function(XMLHttpRequest, textStatus, errorThrown) {
 
@@ -123,9 +126,12 @@
             },
             success: function (data) {
                 var html = "";
-                if(data!=null){
-                    html +=  '<p>'+data.name+'，'+data.age+'</p>';
+                if(data!=null && data.length>0){
+                    for(var i=0; i<data.length; i++){
+                        html +=  '<p>'+data[i].name+'，'+data[i].age+'</p>';
+                    }
                 }
+                $("#selectEmps").html(html);
             }
         });
     };

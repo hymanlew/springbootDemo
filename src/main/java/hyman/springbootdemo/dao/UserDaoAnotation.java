@@ -20,7 +20,7 @@ import java.util.List;
 public interface UserDaoAnotation {
 
     @Select("select * from user where name like #{name}")
-    User findByName(@Param("name") String name);
+    List<User> findByName(@Param("name") String name);
 
     @Select("SELECT * FROM user WHERE id = #{id}")
     @Results({
