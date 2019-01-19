@@ -44,6 +44,12 @@ import java.util.Locale;
  * 在启动类中添加对mapper包扫描@MapperScan，或者直接在Mapper类上面添加注解@Mapper,建议使用上面那种，不然每个mapper加个注解也挺麻烦的。
  */
 
+/**
+ * 当引入 redis-starter 后，容器中保存的是 RedisCashManager，并且它创建 rediscache 作为缓存组件。rediscache 通过操作 redis 来缓存数据。
+ * 即一旦引入 redis-starter，则 springboot 就默认把 redis 当作缓存，它是全自动配置的。
+ * 但其对象的保存都是使用
+ */
+
 //@ImportResource(locations = {"classpath:beans.xml"})
 @MapperScan(basePackages = "hyman.springbootdemo.dao")
 @SpringBootApplication

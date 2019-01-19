@@ -1,13 +1,17 @@
 package hyman.springbootdemo;
 
 import hyman.springbootdemo.entity.Person;
+import hyman.springbootdemo.entity.User;
 import hyman.springbootdemo.util.Logutil;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -256,4 +260,64 @@ public class SpringbootdemoApplicationTests {
 
      MvcResult andReturn() ：返回验证成功后的MvcResult；用于自定义验证/下一步的异步处理；(主要是拿到结果进一步做自定义断言)
      */
+
+
+    /**
+     * 自动配置的 StringRedisTemplate 对象进行Redis的读写操作，该对象从命名中就可注意到支持的是String类型。如果有使用过
+     * spring-data-redis 的开发者一定熟悉 RedisTemplate<K, V> 接口，StringRedisTemplate 就相当于 RedisTemplate<String, String>
+     * 的实现。
+     */
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Test
+    public void test2(){
+        stringRedisTemplate.opsForValue().set("aaa","111");
+        Assert.assertEquals("111",stringRedisTemplate.opsForValue().get("aaa"));
+    }
+
+
+    /**
+     * 除了String类型，还可以存储对象，使用类似 RedisTemplate<String, User> 来初始化并进行操作。
+     * converter ：变流器，转化器；
+     *
+     * Redis五大类型:字符串（String）、哈希/散列（Hash）、列表（List）、集合（Set）、有序集合（sorted set/Zset），相应的操作方法：
+     *
+     * redisTemplate.opsForValue();		//操作字符串
+     * redisTemplate.opsForHash();		//操作hash
+     * redisTemplate.opsForList();		//操作list
+     * redisTemplate.opsForSet();		//操作set
+     * redisTemplate.opsForZSet();		//操作有序set
+     *
+     * 并且在每种类型操作方法之内还有更加细的具体操作方法，如 set，get 这种。
+     */
+    @Resource
+    private RedisTemplate<String,User> redisTemplate;
+    @Resource
+    private RedisTemplate<String,User> myRedisTemplate;
+
+    @Test
+    public void test3(){
+        /**
+         * 在 redisConfig 包中的类是在低版本 redis-starter 中，对对象的存储需要自定义序列化的。但在高版本中，全部是自动配置的。
+         * 保存对象的机制，默认是使用 JDK 的序列化机制。
+         */
+        User user = new User("man", 20+"");
+        redisTemplate.opsForValue().set(user.getName(),user);
+
+        user = new User("girl", 30+"");
+        redisTemplate.opsForValue().set(user.getName(),user);
+
+        Assert.assertEquals(20+"",redisTemplate.opsForValue().get("man").getPassword());
+        Assert.assertEquals(30+"",redisTemplate.opsForValue().get("girl").getPassword());
+
+
+        user = new User("jman", 20+"");
+        myRedisTemplate.opsForValue().set(user.getName(),user);
+
+        user = new User("jgirl", 30+"");
+        myRedisTemplate.opsForValue().set(user.getName(),user);
+        Logutil.logger.info("==== 存储对象成功 ====");
+    }
+
 }
