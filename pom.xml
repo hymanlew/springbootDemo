@@ -140,7 +140,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<!-- 1.5 版本默认采用的连接池技术是 jedis。而 2.0以上版本默认连接池是 lettuce。如果需要采用jedis，就要排除 lettuce的jar -->
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<groupId>io.lettuce</groupId>-->
+					<!--<artifactId>lettuce-core</artifactId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
 		</dependency>
+		<!-- spring2.0集成redis所需common-pool2 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>

@@ -46,8 +46,8 @@ import java.util.Locale;
 
 /**
  * 当引入 redis-starter 后，容器中保存的是 RedisCashManager，并且它创建 rediscache 作为缓存组件。rediscache 通过操作 redis 来缓存数据。
- * 即一旦引入 redis-starter，则 springboot 就默认把 redis 当作缓存，它是全自动配置的。
- * 但其对象的保存都是使用
+ * 即一旦引入 redis-starter，则 springboot 就默认把 redis 当作缓存，它是全自动配置的。rediscache 使用 redistemplate 来处理数据，但其对
+ * 象的保存默认都是使用 JDK 序列化机制，所以需要自定义 RedisCashManager。
  */
 
 //@ImportResource(locations = {"classpath:beans.xml"})

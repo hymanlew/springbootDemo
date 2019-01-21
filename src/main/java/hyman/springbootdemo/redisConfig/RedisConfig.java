@@ -1,15 +1,32 @@
 package hyman.springbootdemo.redisConfig;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hyman.springbootdemo.entity.User;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.net.UnknownHostException;
+import java.time.Duration;
 
+/**
+ * @EnableCaching，必须加，使配置生效
+ */
 @Configuration
+@EnableCaching
+@ConfigurationProperties(prefix = "spring.cache.redis")
 public class RedisConfig {
 
     // 该方法只能用于本地使用（即 localhost），因为其 JedisPool 默认就是 this((String)"localhost", 6379)
@@ -20,9 +37,9 @@ public class RedisConfig {
     //    return jedisConnectionFactory;
     //}
 
+    // 该方法只是用于测试自定义的 template，在测试类中单独调用。因为在 springboot 系统中可以在 cachemanager 中直接设置的。
     @Bean
     public RedisTemplate<Object, User> myRedisTemplate(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
-
         RedisTemplate<Object, User> template = new RedisTemplate();
         template.setConnectionFactory(redisConnectionFactory);
 
@@ -33,5 +50,39 @@ public class RedisConfig {
         Jackson2JsonRedisSerializer<User> serializer = new Jackson2JsonRedisSerializer(User.class);
         template.setDefaultSerializer(serializer);
         return template;
+    }
+
+    /**
+     * 在 spring boot2中的 redis的时间相关的配置使用了 java.time.Duration类，从源码中可以看出时间配置应该诸如：ms、s、m、h、d 的形式。
+     * 设置数据缓存的时间。
+     */
+    private Duration timeToLive = Duration.ZERO;
+    public void setTimeToLive(Duration timeToLive) {
+        this.timeToLive = timeToLive;
+    }
+
+    // 将自定义的 template（自定义序列化机制） 加入到 spring 系统中，参数自动注入。
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+
+        //解决查询缓存转换异常的问题
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+
+        // 配置序列化（解决乱码的问题）
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(timeToLive)
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
+                .disableCachingNullValues();
+
+        RedisCacheManager cacheManager = RedisCacheManager.builder(redisConnectionFactory)
+                .cacheDefaults(config)
+                .build();
+        return cacheManager;
     }
 }
