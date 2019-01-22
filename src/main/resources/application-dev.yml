@@ -25,11 +25,16 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
+#  rabbitmq:
+#      virtual-host: hymanhost
+#      username: hyman
+#      password: hyman
+#      addresses: 127.0.0.1:5672
+
   rabbitmq:
-      virtual-host: hymanhost
-      username: hyman
-      password: hyman
-      addresses: 127.0.0.1:5672
+      username: guest
+      password: guest
+      host: 192.168.1.153
 
   redis:
     database: 0
@@ -49,7 +54,7 @@ spring:
 # 连接超时时间（毫秒）
       timeout: 0
 
-# 秒
+# 毫秒，秒，分，时，天
   cache:
     redis:
       timeToLive: 1h

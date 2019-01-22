@@ -7,7 +7,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,6 +27,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
+
+import java.io.PipedReader;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -194,7 +202,6 @@ public class SpringbootdemoApplicationTests {
      dispatchOptions：DispatcherServlet是否分发OPTIONS请求方法到控制器；
 
 
-
      StandaloneMockMvcBuilder继承了DefaultMockMvcBuilder，又提供了如下API：
 
      setMessageConverters(HttpMessageConverter<?>...messageConverters)：设置HTTP消息转换器；
@@ -232,7 +239,6 @@ public class SpringbootdemoApplicationTests {
      因为StandaloneMockMvcBuilder不会加载Spring MVC配置文件，因此就不会注册我们需要的一些组件，因此就提供了如上API用于注册我们需要的相应组件。
 
 
-
      MockMvcRequestBuilders主要API：
 
      MockHttpServletRequestBuilder get(String urlTemplate, Object... urlVariables)：根据uri模板和uri变量值得到一个GET请求方式的MockHttpServletRequestBuilder；如get("/user/{id}", 1L)；
@@ -246,12 +252,8 @@ public class SpringbootdemoApplicationTests {
      MockHttpServletRequestBuilder options(String urlTemplate, Object... urlVariables)：同get类似，但是是OPTIONS方法；
 
 
-
-
      ResultActions（在请求得到响应之后，就会自动生成）：
-
      ResultActions：
-
      调用MockMvc.perform(RequestBuilder requestBuilder)后将得到ResultActions，通过ResultActions完成如下三件事：
 
      ResultActions andExpect(ResultMatcher matcher) ：添加验证断言来判断执行请求后的结果是否是预期的；
@@ -275,7 +277,6 @@ public class SpringbootdemoApplicationTests {
         stringRedisTemplate.opsForValue().set("aaa","111");
         Assert.assertEquals("111",stringRedisTemplate.opsForValue().get("aaa"));
     }
-
 
     /**
      * 除了String类型，还可以存储对象，使用类似 RedisTemplate<String, User> 来初始化并进行操作。
@@ -320,4 +321,50 @@ public class SpringbootdemoApplicationTests {
         Logutil.logger.info("==== 存储对象成功 ====");
     }
 
+
+    /**
+     * RabbitAdmin: 用于声明交换机、队列、绑定等。
+     * RabbitTemplate: 用于 RabbitMQ 消息的发送和接收。
+     * MessageListenerContainer: 监听容器，为消息入队提供异步处理。
+     */
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Test
+    public void test4(){
+        //MessageProperties messageProperties = new MessageProperties();
+        //messageProperties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+        //messageProperties.setContentType("UTF-8");
+        //Message message = new Message(("boot 主生产信息").getBytes(), messageProperties);
+        //rabbitTemplate.send("bootexchange", "add", message);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("msg","testmsg");
+        map.put("msg", Arrays.asList("A",123,true));
+        rabbitTemplate.convertAndSend("bootexchange","add",map);
+        Logutil.logger.info("==== 存储对象成功 ====");
+    }
+
+    @Test
+    public void test5(){
+        Object object = rabbitTemplate.receiveAndConvert("bootqueue");
+        Logutil.logger.info("======"+object.getClass());
+        Logutil.logger.info("======"+object.toString());
+        Logutil.logger.info("==== 存储对象成功 ====");
+    }
+
+    @Autowired
+    private AmqpAdmin amqpAdmin;
+
+    @Test
+    public void test6(){
+        amqpAdmin.declareExchange(new TopicExchange("hymanexchange",true,false,new HashMap<>()));
+
+        // 声明队列 (队列名, 是否持久化, 是否排他, 是否自动删除, 队列属性);
+        amqpAdmin.declareQueue(new Queue("testqueue",true,false,false,new HashMap<>()));
+
+        // 要绑定到的目标，目标类型，交换器名，routing key，参数map
+        amqpAdmin.declareBinding(new Binding("testqueue",Binding.DestinationType.QUEUE,"hymanexchange","test.#",new HashMap<>()));
+        Logutil.logger.info("==== 存储对象成功 ====");
+    }
 }

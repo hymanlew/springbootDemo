@@ -1,5 +1,6 @@
 package hyman;
 
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.mybatis.spring.annotation.MapperScan;
@@ -42,6 +43,8 @@ import java.util.Locale;
  * @EnableTransactionManagement 开启事务管理
  *
  * 在启动类中添加对mapper包扫描@MapperScan，或者直接在Mapper类上面添加注解@Mapper,建议使用上面那种，不然每个mapper加个注解也挺麻烦的。
+ *
+ * @EnableRabbit + @RabbitListener(queues = "xxx")，它会自动监听并获取到指定队列中的消息。
  */
 
 /**
@@ -54,6 +57,7 @@ import java.util.Locale;
 @MapperScan(basePackages = "hyman.springbootdemo.dao")
 @SpringBootApplication
 @EnableCaching
+@EnableRabbit
 @EnableTransactionManagement
 public class SpringbootdemoApplication {
 
