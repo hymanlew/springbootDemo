@@ -38,6 +38,14 @@ public class Person {
     private List<Object> lists;
     private Message message;
 
+    public Person() {
+    }
+
+    public Person(String lastName, Integer age) {
+        this.lastName = lastName;
+        this.age = age;
+    }
+
     public String getLastName() {
         return lastName;
     }
