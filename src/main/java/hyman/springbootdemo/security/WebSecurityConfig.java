@@ -1,7 +1,6 @@
 package hyman.springbootdemo.security;
 
 import hyman.springbootdemo.entity.User;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,7 +18,6 @@ import java.util.List;
  * 由于 spring boot是自动加载并装配配置文件的，所以只要引入了 security jar包，就算把这个类都注解掉了，但是项目启动
  * 后访问还是要进行认证的，只不过是采用框架默认的认证体系，密码也是被加过密了。
  */
-@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -45,12 +43,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         for (User user : list) {
             auth
                     .inMemoryAuthentication()
-                    .withUser(user.getName()).password(user.getPassword()).roles("ADMIN");
-            auth
-                    .inMemoryAuthentication()
                     .passwordEncoder(new MyPasswordEncoder())
-                    .withUser(user.getName()).password(user.getPassword()).roles("ADMIN");
+                    .withUser(user.getName()).password(user.getPassword()).roles("ADMIN","USER");
         }
+
+        //for (User user : list) {
+        //    auth
+        //            .inMemoryAuthentication()
+        //            .withUser(user.getName()).password(user.getPassword()).roles("ADMIN","USER");
+        //}
     }
 
     /**
@@ -110,6 +111,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //默认开启，关闭默认的 csrf 认证
         http.csrf().disable();
+
+        // 记住我功能，默认保存 14天，点击注解会删除记录的 cookie
+        http.rememberMe()
+                .rememberMeParameter("remember");
     }
 
     @Override

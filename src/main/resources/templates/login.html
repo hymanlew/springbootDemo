@@ -41,9 +41,10 @@
     <div th:text="${logout}" th:if="${logout}"></div>
 
     <!--
-    注意只能使用 post 请求，否则会一直重定向到根目录路径。
-    并且该路径必须与 security 指定的方法保持一致（这个路径不重要，是显示在浏览器上的路径）。否则会 302 重定向，或 404。
-    （它与 successHandler 有关）。
+    注意只能使用 post 请求表示处理登录请求，因为 get 请求默认会一直重定向到根目录路径或是登录页面。
+    并且该路径必须与 security 指定的方法保持一致（不重要，只是显示在浏览器上的路径，会被转发）。否则会 302 重定向，或 404。
+    （它与 successHandler 有关，如果没有设置 successHandler 则就必须使用 /login（系统默认路径），并且用户验证成功后会重定向
+    到根目录路径）。
      -->
     <h2 th:text="#{log.tip}">请登录</h2>
     <form th:action="@{/security}" method="post">
@@ -55,6 +56,7 @@
             <label th:text="#{log.pass}">密码：</label>
             <input type="password" name="password" />
         </div>
+        <div><input type="checkbox" name="remember" th:text="#{log.remember}"></div>
         <div><input type="submit" value="登录" th:value="#{log.login}"></div>
     </form>
     <hr />

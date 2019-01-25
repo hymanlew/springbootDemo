@@ -28,6 +28,8 @@
     th：任意html属性；作用是替换原生属性的值。下面的红线是 IDEA 的提示，不用管。
 
     其中，[[ ]] 等于 th:text，[( )] 等于 th:utext，它们是可以单独使用的（不需要与 inline 合用）。
+
+    并且在 springboot5 新版本集成的 thmeleaf 模版中是不支持 springsecurity 的 sec 标签的。即不能使用 sec:authorize。
 */-->
 
 <h1 th:inline="text">当前登录的用户是： [[${#httpServletRequest.remoteUser}]]，welcome!</h1>

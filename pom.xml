@@ -101,7 +101,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-
 		<!-- 用于支持 thymeleaf 的 LEGACYHTML5，即非严格检查的 html模板-->
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
@@ -158,7 +157,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-			<version>1.5.14.RELEASE</version>
         </dependency>
 
 		<!-- 基于 Hibernate 的数据库处理包，不使用 -->
@@ -171,7 +169,7 @@
 			热部署插件：
 			该模块在完整的打包环境下运行的时候会被禁用。如果你使用java -jar启动应用或者用一个特定的classloader启动，它会认
 			为这是一个“生产环境”。
-			它可以在修改 java 代码之后不需要重启服务器。而 IDEA tool 中的热部署键只是用于刷新静态页面。
+			它可以在修改 java 代码之后不需要重启服务器，ctrl+F9（即向下的箭头）。而 IDEA tool 中的热部署键只是用于刷新静态页面。
 		-->
         <dependency>
 			<groupId>org.springframework.boot</groupId>

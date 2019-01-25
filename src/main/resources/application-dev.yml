@@ -72,6 +72,12 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 
+# 使用监控功能，端口号加上 /actuator 才能访问相应的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
 
 
 
