@@ -1,6 +1,6 @@
 package hyman;
 
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+//import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.mybatis.spring.annotation.MapperScan;
@@ -51,13 +51,15 @@ import java.util.Locale;
  * 当引入 redis-starter 后，容器中保存的是 RedisCashManager，并且它创建 rediscache 作为缓存组件。rediscache 通过操作 redis 来缓存数据。
  * 即一旦引入 redis-starter，则 springboot 就默认把 redis 当作缓存，它是全自动配置的。rediscache 使用 redistemplate 来处理数据，但其对
  * 象的保存默认都是使用 JDK 序列化机制，所以需要自定义 RedisCashManager。
+ *
+ * 在本项目中启动暂时关闭相关功能，因为是实验 demo 服务器没有默认启动，所以项目启动会一直尝试连接服务器，而启动太慢。
  */
 
 //@ImportResource(locations = {"classpath:beans.xml"})
 @MapperScan(basePackages = "hyman.springbootdemo.dao")
 @SpringBootApplication
-@EnableCaching
-@EnableRabbit
+//@EnableCaching
+//@EnableRabbit
 @EnableTransactionManagement
 public class SpringbootdemoApplication {
 

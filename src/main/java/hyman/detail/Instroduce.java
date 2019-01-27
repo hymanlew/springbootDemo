@@ -104,6 +104,7 @@ public class Instroduce {
      * 所有的 **斜杠favicon.ico（图标）都是在静态资源文件下找。
      *
      */
+
     /**
      * J2EE 定义了一个统一的缓存规范（JSR107），Java Caching 定义了5个核心接口，分别是CachingProvider, CacheManager, Cache, Entry 和
      * Expiry：
@@ -138,8 +139,22 @@ public class Instroduce {
      * @EnableCaching	开启基于注解的缓存，使用以上注解时必须加上这个。
      * keyGenerator	缓存数据时 key生成策略
      * serialize		缓存数据时 value序列化策略
-     *
-     *
-     *
+     */
+
+    /**
+     * springboot 2 使用监控功能，端口号加上 /actuator 才能访问相应的端点，只能访问添加过的端点：
+     * 端点名	    描述
+     * autoconfig	所有自动配置信息，已经启用的
+     * auditevents	审计事件
+     * beans	    所有Bean的信息
+     * configprops	所有配置属性
+     * dump	        线程状态信息
+     * env	        当前环境信息
+     * health	    应用健康状况
+     * info	        当前应用信息
+     * metrics	    应用的各项指标，性能指标
+     * mappings	    应用 @RequestMapping 映射路径
+     * shutdown	    关闭当前应用（默认关闭），使用 post 方式远程关闭当前系统
+     * trace	    追踪信息（最新的http请求）
      */
 }
