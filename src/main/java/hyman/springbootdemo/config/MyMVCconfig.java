@@ -1,5 +1,6 @@
 package hyman.springbootdemo.config;
 
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -42,6 +43,27 @@ public class MyMVCconfig implements WebMvcConfigurer{
         // SpringBoot已经做好了静态资源映射，所以不需要单独配置
         registry.addInterceptor(new MyHandlerInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/login","/parselogin");
+    }
+
+    // 处理跨域请求
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 设置允许跨域的路径
+        registry.addMapping("/**")
+                // 设置允许跨域请求的域名，多个域名以逗号分隔
+                .allowedOrigins("*")
+
+                // 是否允许发送 Cookies，不再默认开启
+                .allowCredentials(true)
+
+                // 设置自定义的请求头字段，多个字段以逗号分隔。如果没有自定义的请求头则不用写，默认都支持
+                //.allowedHeaders()
+
+                // 设置允许的 HTTP 请求方法，多个方法以逗号分隔
+                .allowedMethods("*")
+
+                // 跨域允许时间（秒），默认 30 分钟
+                .maxAge(3600);
     }
 }
 

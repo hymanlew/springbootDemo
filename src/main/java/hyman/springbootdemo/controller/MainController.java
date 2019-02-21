@@ -2,15 +2,39 @@ package hyman.springbootdemo.controller;
 
 import hyman.springbootdemo.entity.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
 import java.util.Map;
 
+/**
+ * CrossOrigin，处理跨域请求，可加在类上（代表全部的方法），也可加在方法上（单独跨域）。
+ *
+ * 使用这种方式，ajax 请求时就不用声明为 jsonp 了，服务器会自动响应 jsonp。
+ * $.ajax({
+     type : "get",
+     url: 'http://sso.isy.cn/login.json',
+     data: $("#loginForm").serialize(),
+     xhrFields: {
+        withCredentials: true //注意这里必须指定，否则cookie无法传递过去
+     },
+     success : function(data){
+
+     },
+     error:function(data){
+         console.log("登录出错");
+         $.we.utils.gotoUrl("/");
+     }
+  });
+
+ */
+@CrossOrigin
 @Controller
 @RequestMapping
 public class MainController {
 
+    @CrossOrigin
     @RequestMapping(value = {"/login"})
     public String gologin(){
         return "login";
