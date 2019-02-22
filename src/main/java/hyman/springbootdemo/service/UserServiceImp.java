@@ -5,6 +5,7 @@ import hyman.springbootdemo.dao.UserDaoAnotation;
 import hyman.springbootdemo.entity.PropSet;
 import hyman.springbootdemo.entity.User;
 import hyman.springbootdemo.util.Logutil;
+import hyman.springbootdemo.util.MybatisResults;
 import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
@@ -112,7 +113,6 @@ public class UserServiceImp implements UserService {
     public List<User> findByName(String name) {
         return userDaoAnotation.findByName(name);
     }
-
 
 
     @Resource
