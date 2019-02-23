@@ -48,6 +48,18 @@ public class DateJsonDemo {
     }
 
 
+    public static void toList() {
+        /**
+         * 要注意，基本数据类型的数组（如int[],long[]）直接用 Arrays.asList 转成 list，那么 List 中就只会有一个 Integer数组
+         * 类型的对象，整个数组作为一个元素存进去的。而对象类型数组转 list 则是遍历后存入的。所以基本数据类型数组要转成包装类
+         * 后再转 list。
+         *
+         * 也可以使用 apache commons-lang 工具包里的数组工具类 ArrayUtils 类的 toObject()方法，非常方便：
+         *
+         * Arrays.asList(ArrayUtils.toObject(基本数据类型的数组))。
+         */
+    }
+
     public static void main(String[] args) {
         String test = null;
         System.out.println(test==null);

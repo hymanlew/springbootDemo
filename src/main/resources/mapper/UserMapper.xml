@@ -45,4 +45,53 @@
     FROM user
   </select>
 
+  <select id="find" resultMap="baseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM user
+
+--     WHERE name like concat('%', #{name}, '%')
+
+--     表示当 trim 中含有内容时， 添加 where， 且第一个为 and 或 or 时， 会将其去掉。 而如果没有内容， 则不添加 where。
+--     prefix: 当 trim 元素包含有内容时， 增加 prefix 所指定的前缀
+--     prefixOverrides: 当 trim 元素包含有内容时， 去除 prefixOverrides 指定的 前缀
+--     suffix: 当 trim 元素包含有内容时， 增加 suffix 所指定的后缀
+--     suffixOverrides： 当 trim 元素包含有内容时， 去除 suffixOverrides 指定的后缀
+
+    <trim prefix="where" prefixOverrides="and | or">
+      <if test="name != null">
+        AND name like concat('%', #{name}, '%')
+      </if>
+    </trim>
+  </select>
+
+  <select id="selectByStudentIdList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where student_id  in
+
+    <foreach collection="list" item="id" open="(" close=")" separator="," index="i">
+       #{id}
+    </foreach>
+  </select>
+
+  <!--
+  bind 是用于创建一个变量，并绑定到上下文中。是用于兼容不同的数据库，防止 SQL 注入等。它是通过 OGNL 表达式去定义一个上下文的
+  变量， 这样方便我们使用。
+  在 MySQL 中，该函数支持多参数，但在 Oracle 中只支持两个参数。那么我们可以使用 bind 来让该 SQL 达到支持两个数据库的作用。
+  -->
+  <select id="find1" resultMap="baseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM user
+
+    <trim prefix="where" prefixOverrides="and | or">
+      <if test="name != null">
+        <bind name="nameb" value="'%'+name+'%'" />
+        AND name like #{nameb}
+      </if>
+    </trim>
+  </select>
+
 </mapper>
