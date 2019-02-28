@@ -1,6 +1,7 @@
 package hyman.springbootdemo.server;
 
 import hyman.springbootdemo.util.Logutil;
+import hyman.springbootdemo.util.RequestWrapper;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -96,11 +97,47 @@ public class SeverConfiguration {
         public void init(FilterConfig filterConfig) throws ServletException {
         }
 
+        /**
+         * 基于 SpringBoot的 maven项目，拦截器的使用很多时候是必不可少的，当有需要需要你对 body中的值进行校验，例如加密验签、防重复提交、内容校验等等。 
+         * 当你在拦截器中通过 request.getInputStream();获取到body中的信息后，你会发现你在 controller中使用了 @RequestBody注解获取参数报如下错误：
+         * java.io.IOException: Stream closed。
+         *
+         * 这是因为 @RequestBody 只能以流的方式读取，它是被放在内存中的，当流被读过一次后，再次读取时就会从上次读取的位置开始，那自然数据就不存在了，
+         * 会导致会续无法处理，因此不能直接读流。
+         * 为了解决这个问题，思路如下：
+         * 1、读取流前先把流保存一下。
+         * 2、使用过滤器拦截读取，再通过chain.doFilter(wrapper, response);将保存的流丢到后面程序处理。
+         *
+         * 在使用springMVC中，需要在过滤器中获取请求中的参数token，根据token判断请求是否合法。可以通过 requst.getParameter(key)方法获得参数值，但是
+         * 这种方法有缺陷：它只能获取 POST 提交方式中的 Content-Type: application/x-www-form-urlencoded。
+         *
+         *
+         * 但如果涉及到文件的上传操作，则上传文件的请求 content-type为：multipart/form-data；此种请求无法直接用 request.getParam(key)获取对应的属性值，
+         * request中获取的属性值全部为空，无法正常获取；
+         * 就需要借助 Spring框架中的 CommonsMultipartResolver.resolveMultipart(HttpServletRequest request) 将 request转为 MultipartHttpServletRequest，
+         * 从而使用 getParameter(key)方法获取指定的值；
+         * 在将对象转化完成后，要将转化完成的对象赋值给过滤链中的 request参数中，即如下代码中的 req = multiReq； 赋值完成很重要，否则在controller层中依旧
+         * 无法获取其他参数。
+         * 如果不需要在 filter中获取请求中的值，则无需额外的操作，因为在请求经过 springMVC框架后，框架会自动识别请求方式，如果是文件请求，会自动调用
+         * CommonsMultipartResolver.resolveMultipart(HttpServletRequest request) 方法转化；
+         */
         @Override
         public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-            HttpServletRequest request = (HttpServletRequest)servletRequest;
-            System.out.println("============= 拦截 url："+request.getRequestURI());
-            filterChain.doFilter(servletRequest,servletResponse);
+
+            ServletRequest requestWrapper = null;
+
+            // 因为 ServletRequest 与 HttpServletRequest 都是接口，所以可以使用 instanceof（判断的是其实现类）。
+            if(servletRequest instanceof HttpServletRequest){
+
+                HttpServletRequest request = (HttpServletRequest)servletRequest;
+                System.out.println("============= 拦截 url："+request.getRequestURI());
+                requestWrapper = new RequestWrapper(request);
+            }
+            if(requestWrapper == null){
+                filterChain.doFilter(servletRequest,servletResponse);
+            }else {
+                filterChain.doFilter(requestWrapper,servletResponse);
+            }
         }
 
         @Override

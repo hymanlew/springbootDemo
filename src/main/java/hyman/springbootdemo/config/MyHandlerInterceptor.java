@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
  *
  *
  * 因此在 Spring 构架的程序中，要优先使用拦截器。几乎所有 Filter 能够做的事情，interceptor 都能够轻松的实现。但它们使用范围不同，规范不同。
- *
  * 拦截器（Interceptor）和过滤器（Filter）的执行顺序：过滤前（filter）-- 拦截前（interceptor）-- Action处理-拦截后-过滤后。
  *
  * 自定义 AOP 拦截器：
