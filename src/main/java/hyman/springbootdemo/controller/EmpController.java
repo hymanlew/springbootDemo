@@ -3,12 +3,18 @@ package hyman.springbootdemo.controller;
 import hyman.springbootdemo.entity.User;
 import hyman.springbootdemo.service.UserService;
 import hyman.springbootdemo.util.Logutil;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * select == get
@@ -36,13 +42,21 @@ public class EmpController {
         return "html/emplist";
     }
 
+    /**
+     * 需要注意在方法中使用验证时，@Valid 的参数后必须紧挨着一个BindingResult 参数，否则spring会在校验不通过时直接抛出异常。
+     */
     @PostMapping("/addEmp")
-    public String addEmp(Map<String,Object> map,User user){
+    public String addEmp(Map<String,Object> map, @Validated User user, BindingResult result){
         Logutil.logger.info("=== 添加工人："+user.toString());
 
-        // 在这里必须使用 redirect 重定向，因为两个方法的请求方式不同（GET，POST）。如果是同一种请求方式，则应该使用 forward。
-        //return "forward:/emp/emps";
-        return "redirect:/emp/emps";
+        if(result.hasErrors()){
+            Logutil.getValidData(map, result);
+            return "html/empadd";
+        }else {
+            // 在这里必须使用 redirect 重定向，因为两个方法的请求方式不同（GET，POST）。如果是同一种请求方式，则应该使用 forward。
+            //return "forward:/emp/emps";
+            return "redirect:/emp/emps";
+        }
     }
 
     @GetMapping("/getById/{id}")
@@ -54,13 +68,19 @@ public class EmpController {
     }
 
     @PutMapping("/addEmp")
-    public String updateEmp(Map<String,Object> map,User user){
+    public String updateEmp(Map<String,Object> map, @Validated User user, BindingResult result){
         Logutil.logger.info("=== 修改工人信息："+user.toString());
 
-        userService.update(user);
-        // 在这里必须使用 redirect 重定向，因为两个方法的请求方式不同（GET，POST）。如果是同一种请求方式，则应该使用 forward。
-        //return "forward:/emp/emps";
-        return "redirect:/emp/emps";
+        if(result.hasErrors()){
+            Logutil.getValidData(map, result);
+            return "html/empadd";
+        }else {
+            //userService.update(user);
+
+            // 在这里必须使用 redirect 重定向，因为两个方法的请求方式不同（GET，POST）。如果是同一种请求方式，则应该使用 forward。
+            //return "forward:/emp/emps";
+            return "redirect:/emp/emps";
+        }
     }
 
     @DeleteMapping("/delete/{id}")

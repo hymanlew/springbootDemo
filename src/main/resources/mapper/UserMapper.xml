@@ -65,7 +65,7 @@
     </trim>
   </select>
 
-  <select id="selectByStudentIdList" resultMap="BaseResultMap">
+  <select id="selectByStudentIdList" resultMap="baseResultMap">
     select
     <include refid="Base_Column_List" />
     from student

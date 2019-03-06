@@ -99,6 +99,7 @@
 </form>
 <br>===========================================================================
 <br>===========================================================================
+<h3 th:text="${error}">被替换的错误信息，并转义特殊字符</h3>
 
 <form class="layui-form" th:action="@{/emp/addEmp}" method="post" id="submit1" lay-filter="example">
     <input type="hidden" name="_method" value="put" th:if="${emp!=null}"/>

@@ -1,11 +1,12 @@
 package hyman.springbootdemo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,10 +28,20 @@ import java.util.Date;
  *
  * @JsonIgnoreProperties(value={“xxx”}) 注解是必须要加在 pojo 类上的，value 值就是要忽略的一些属性，这些属性是被 lazy加载的，也就是many-to-one的 one
  * 端的 pojo上。
- * 以下注解的作用是告诉 jsonplug 组件，在将代理对象转换为 json 对象时，忽略value对应的数组中的属性，即：通过 java的反射机制将 pojo转换成 json的，属性，
- * 通过 java的反射机制将 pojo转换成 json的控制器。
+ * 以下注解的作用是告诉 jsonplug 组件，在将代理对象转换为 json 对象时，忽略value对应的数组中的属性，即（通过 java的反射机制将 pojo转换成 json的，属性，
+ * 通过 java的反射机制将 pojo转换成 json的控制器）。如果你想在转换的时候继续忽略其他属性，可以在数组中继续加入。
  *
- * 如果你想在转换的时候继续忽略其他属性，可以在数组中继续加入。
+ * @JsonProperty： 可用来自定义属性名称；
+ * @JsonIgnore： 可用来忽略不想输出某个属性；
+ * @JsonInclude： 可用来动态包含属性，如可以不包含为 null 值的属性；
+ *
+ *
+ * 返回 XML 数据：
+ * 加入 XML 工具依赖：jackson-dataformat-xml 包。
+ * 返回 xml 类型：@RequestMapping(value = "/test" produces = MediaType.APPLICATION_XML_VALUE)。
+ * @JacksonXmlRootElement： 用在类上，用来自定义根节点名称；
+ * @JacksonXmlProperty： 用在属性上，用来自定义子节点名称；
+ * @JacksonXmlElementWrapper： 用在属性上，可以用来嵌套包装一层父节点，或者禁用此属性参与 XML 转换。
  *
  * 使用 redis 处理对象，必须实现序列化接口进行序列化。
  */
@@ -39,9 +50,11 @@ public class User implements Serializable {
 
     private Integer id;
 
-    @NotEmpty(message="姓名不能为空！")
+    @JsonProperty("userName")
+    @NotBlank(message="姓名不能为空！")
     private String Name;
 
+    @NotNull(message = "性别为空")
     private Integer sex;
 
     @Max(value=100,message="年龄不能大于100岁")
@@ -52,7 +65,12 @@ public class User implements Serializable {
     @Length(min=6,message="密码长度不能小于6位")
     private String Pass_word;
 
+    @JsonIgnore
+    @NotNull(message = "===")
     private Date birth;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String test;
 
     public User() {
     }
@@ -98,6 +116,14 @@ public class User implements Serializable {
         this.Name = name;
     }
 
+    public String getPass_word() {
+        return Pass_word;
+    }
+
+    public void setPass_word(String pass_word) {
+        Pass_word = pass_word;
+    }
+
     public Integer getSex() {
         return sex;
     }
@@ -130,15 +156,24 @@ public class User implements Serializable {
         this.birth = birth;
     }
 
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + Name + '\'' +
+                ", Name='" + Name + '\'' +
                 ", sex=" + sex +
                 ", age=" + age +
-                ", password='" + Pass_word + '\'' +
+                ", Pass_word='" + Pass_word + '\'' +
                 ", birth=" + birth +
+                ", test='" + test + '\'' +
                 '}';
     }
 }

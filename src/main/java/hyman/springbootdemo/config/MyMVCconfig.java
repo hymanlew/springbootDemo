@@ -1,10 +1,17 @@
 package hyman.springbootdemo.config;
 
 import org.apache.tomcat.util.http.parser.Authorization;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.DelegatingMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.*;
+
+import java.nio.charset.StandardCharsets;
 
 // springboot 扩展 springMVC 的功能配置类
 
@@ -44,6 +51,14 @@ public class MyMVCconfig implements WebMvcConfigurer{
         registry.addInterceptor(new MyHandlerInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/login","/parselogin");
     }
+
+    // 添加参数验证器
+    //@Override
+    //public Validator getValidator() {
+    //    LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+    //    validator.setValidationMessageSource(new DelegatingMessageSource());
+    //    return validator;
+    //}
 
     // 处理跨域请求
     @Override

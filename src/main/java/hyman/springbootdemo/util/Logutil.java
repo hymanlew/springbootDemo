@@ -2,6 +2,13 @@ package hyman.springbootdemo.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Logutil {
 
@@ -19,6 +26,17 @@ public class Logutil {
         logger.info("这是info日志，自定义的信息...");
         logger.warn("这是warn日志，记录警告...");
         logger.error("这是error日志，记录错误异常...");
+    }
+
+    public static void getValidData(Map<String, Object> map, BindingResult result) {
+        List<ObjectError> errorList = result.getAllErrors();
+        Set<String> errors = new LinkedHashSet<>();
+        for(ObjectError error : errorList){
+            Logutil.logger.error("=== 工人错误信息："+error.getDefaultMessage());
+            errors.add(error.getDefaultMessage());
+
+        }
+        map.put("error",errors);
     }
 
     public static void main(String[] args) {
