@@ -1,5 +1,6 @@
 package hyman.springbootdemo.config;
 
+import hyman.springbootdemo.util.ServerException;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,18 @@ import java.util.Map;
  * 在实际应用中，系统的错误页面对用户来说并不够友好，我们通常需要去实现我们自己的异常提示。所以 springboot 已经实现好了，直接
  * 放置好页面就好，一般不需要自定义异常处理器。
  *
- * @ControllerAdvice 定义全局统一的异常处理类，而不是在每个Controller中逐个定义。
+ * @ControllerAdvice 定义全局统一的异常处理类，而不是在每个Controller中逐个定义。也可以使用 basePackages 指定作用的包。
  * @ExceptionHandler 用来定义函数针对的异常类型（指定异常类型），最后将Exception对象和请求URL映射到error.html中。
  *
  * 利用 @ControllerAdvice + @ExceptionHandler 组合处理Controller层RuntimeException异常
  * 当前的设置有问题，因为无论是系统错误，还是服务器错误都会跳转页面，以后解决。
+ *
+ * 另外如果有必要的话，自定义异常打印日志一定要和其他的代码错误分离，不应该混为一谈。其次自定义异常类也并不一定要记录日志，我们
+ * 应该提供独立的log对象（另外声明一个全局异常的日志记录），方便开关。
+ *
+ *
+ * exception.getLocalizedMessage()， 方法返回 Exception的本地化描述。
+ * exception.getMessage()，          方法返回 Exception的详细消息字符串。
  */
 
 @ControllerAdvice
@@ -153,4 +161,16 @@ public class GlobalExceptionHandler {
         return mav;
     }
 
+    /**
+     * 500 - Internal Server Error
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ServerException.class)
+    public ModelAndView customException(HttpServletRequest request,ServerException e){
+
+        mav.addObject("exception",e.getLocalizedMessage());
+        mav.addObject("url",request.getRequestURL());
+        logger.error("======================================"+e.getMessage());
+        return mav;
+    }
 }
