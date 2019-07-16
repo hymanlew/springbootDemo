@@ -58,7 +58,6 @@ public class SeverConfiguration {
     }
 
 
-
     /**
      * 我们常常在项目中会使用 filters 用于录调用日志、排除有XSS威胁的字符、执行权限验证等等。
      * Spring Boot自动添加了 OrderedCharacterEncodingFilter 和 HiddenHttpMethodFilter，并且我们可以自定义Filter。
@@ -144,7 +143,6 @@ public class SeverConfiguration {
         public void destroy() {
         }
     }
-
 
 
     @Bean

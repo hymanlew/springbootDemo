@@ -37,6 +37,9 @@
 // *
 // * 对于客户端的选择，尽量遵循各尽其用的原理，尽管 Jedis比起 Redisson有各种各样的不足，但也应该在需要使用 Redisson的高级特性时再选用 Redisson，
 // * 避免造成不必要的程序复杂度提升。
+// *
+// * Jedis 是 Redis官方推荐的面向 Java的操作 Redis的客户端，而 RedisTemplate是 SpringDataRedis 中对 JedisApi 的高度封装。
+// * springDataRedis 相对于 Jedis 来说可以方便地更换 Redis的 Java客户端，比 Jedis多了自动管理连接池的特性，方便与其他Spring框架进行搭配使用。如：SpringCache
 // */
 //@Configuration
 //@EnableCaching
