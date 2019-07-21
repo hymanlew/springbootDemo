@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -33,9 +35,20 @@ public class RedisConfig {
     //@Bean
     //JedisConnectionFactory jedisConnectionFactory(){
     //    JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-    //    //jedisConnectionFactory.setPassword("123456");
+    //    jedisConnectionFactory.setHostName("127.0.0.1");
+    //    jedisConnectionFactory.setPassword("123456");
     //    return jedisConnectionFactory;
     //}
+
+    @Bean
+    public RedisStandaloneConfiguration configuration(){
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        configuration.setHostName("127.0.0.1");
+        configuration.setPort(6379);
+        configuration.setPassword("123456");
+        configuration.setDatabase(0);
+        return configuration;
+    }
 
     // 该方法只是用于测试自定义的 template，在测试类中单独调用。因为在 springboot 系统中可以在 cachemanager 中直接设置的。
     @Bean
