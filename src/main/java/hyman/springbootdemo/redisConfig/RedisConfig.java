@@ -5,20 +5,24 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hyman.springbootdemo.entity.User;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.stereotype.Component;
 
 import java.net.UnknownHostException;
 import java.time.Duration;
@@ -28,6 +32,8 @@ import java.time.Duration;
  */
 @Configuration
 @EnableCaching
+@Component
+@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "spring.cache.redis")
 public class RedisConfig {
 
@@ -63,6 +69,11 @@ public class RedisConfig {
         Jackson2JsonRedisSerializer<User> serializer = new Jackson2JsonRedisSerializer(User.class);
         template.setDefaultSerializer(serializer);
         return template;
+    }
+
+    @Bean
+    public ReactiveStringRedisTemplate reactiveRedisTemplate(ReactiveRedisConnectionFactory factory) {
+        return new ReactiveStringRedisTemplate(factory);
     }
 
     /**

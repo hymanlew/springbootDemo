@@ -100,7 +100,6 @@ pets1: [cat,dog,pig]
 # 属性配置占位，可以引用前面配置过的属性。如果声明的属性和值是存在的，则可以是用 : 冒号指定默认值。
 
 
-
 # 定义不同的配置文档块，并进行配置
 ---
 server:
@@ -111,3 +110,6 @@ server:
 
 spring:
   profiles: dev2
+
+# springboot-redis
+# -javaagent:/opt/pinpoint-agent/pinpoint-bootstrap-1.8.4.jar -Dpinpoint.agentId=redis -Dpinpoint.applicationName=redis
