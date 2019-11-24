@@ -129,6 +129,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.47</version>
 		</dependency>
 
 		<!-- 引入 jedis 框架 -->
@@ -203,6 +204,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+		<!-- http://rocketmq.apache.org/docs/simple-example/ -->
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-client</artifactId>
+			<version>4.4.0</version>
 		</dependency>
 
 		<!-- log4j 日志门面插件 -->
@@ -323,6 +331,15 @@
 				-->
 				<configuration>
 					<fork>true</fork>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
 				</configuration>
 			</plugin>
 		</plugins>
