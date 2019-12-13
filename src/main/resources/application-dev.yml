@@ -40,28 +40,21 @@ spring:
     database: 0
     host: 127.0.0.1
     port: 6379
-    repositories:
-      enabled: false
 
-    #  redis:
-#    database: 0
-#    host: 192.168.1.153
-#    port: 6379
-#
-##   连接池最大连接数（使用负值表示没有限制）
-#    jedis:
-#      pool:
-#        max-active: 8
-#        min-idle: 8
-#
-##       连接池最大阻塞等待时间（使用负值表示没有限制）
-#        max-wait: -1ms
-#        max-idle: 8
-#
-##     连接超时时间（毫秒）
-#      timeout: 0
+#   连接池最大连接数（使用负值表示没有限制）
+    jedis:
+      pool:
+        max-active: 8
+        min-idle: 8
 
-# 毫秒，秒，分，时，天
+#       连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        max-idle: 8
+
+#   连接超时时间（毫秒）
+    timeout: 0
+
+  # 毫秒，秒，分，时，天
   cache:
     redis:
       timeToLive: 1h

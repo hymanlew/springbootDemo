@@ -108,45 +108,4 @@
 //        return cacheErrorHandler;
 //    }
 //
-//    /**
-//     * 此内部类就是把yml的配置数据，进行读取，创建JedisConnectionFactory和JedisPool，以供外部类初始化缓存管理器使用
-//     * 不了解的同学可以去看@ConfigurationProperties和@Value的作用
-//     *
-//     */
-//    @ConfigurationProperties
-//    class DataJedisProperties{
-//        @Value("${spring.redis.host}")
-//        private  String host;
-//        @Value("${spring.redis.password}")
-//        private  String password;
-//        @Value("${spring.redis.port}")
-//        private  int port;
-//        @Value("${spring.redis.timeout}")
-//        private  int timeout;
-//        @Value("${spring.redis.jedis.pool.max-idle}")
-//        private int maxIdle;
-//        @Value("${spring.redis.jedis.pool.max-wait}")
-//        private long maxWaitMillis;
-//
-//        @Bean
-//        JedisConnectionFactory jedisConnectionFactory() {
-//            Logutil.logger.info("Create JedisConnectionFactory successful");
-//            JedisConnectionFactory factory = new JedisConnectionFactory();
-//            factory.setHostName(host);
-//            factory.setPort(port);
-//            factory.setTimeout(timeout);
-//            factory.setPassword(password);
-//            return factory;
-//        }
-//        @Bean
-//        public JedisPool redisPoolFactory() {
-//            Logutil.logger.info("JedisPool init successful，host -> [{}]；port -> [{}]", host, port);
-//            JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-//            jedisPoolConfig.setMaxIdle(maxIdle);
-//            jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-//
-//            JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
-//            return jedisPool;
-//        }
-//    }
 //}

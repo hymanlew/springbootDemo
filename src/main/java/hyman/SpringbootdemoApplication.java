@@ -1,11 +1,12 @@
 package hyman;
 
-//import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
@@ -53,6 +54,10 @@ import java.util.Locale;
  * 象的保存默认都是使用 JDK 序列化机制，所以需要自定义 RedisCashManager。
  *
  * 在本项目中启动暂时关闭相关功能，因为是实验 demo 服务器没有默认启动，所以项目启动会一直尝试连接服务器，而启动太慢。
+ *
+ * @EnableRedisRepositories （Redis Repositories），使用仓储可以实现Redis Hashs与领域对象无缝的转换和存储，应用自定义的映射策略和使用二
+ * 级索引。Redis的仓储需要至少Redis 2.8.0版本。
+ * 利用仓储的支持可以很轻松的访问存储在Redis 里的领域实体。
  */
 
 //@ImportResource(locations = {"classpath:beans.xml"})
@@ -61,6 +66,7 @@ import java.util.Locale;
 //@EnableCaching
 //@EnableRabbit
 @EnableTransactionManagement
+@EnableRedisRepositories
 public class SpringbootdemoApplication {
 
 	public static void main(String[] args) {

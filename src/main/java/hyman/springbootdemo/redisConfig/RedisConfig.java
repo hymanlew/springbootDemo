@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hyman.springbootdemo.entity.User;
+import hyman.springbootdemo.util.Logutil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
@@ -15,6 +17,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,7 +26,10 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
+import javax.annotation.Resource;
 import java.net.UnknownHostException;
 import java.time.Duration;
 
@@ -37,17 +43,46 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "spring.cache.redis")
 public class RedisConfig {
 
-    // 该方法只能用于本地使用（即 localhost），因为其 JedisPool 默认就是 this((String)"localhost", 6379)
-    //@Bean
-    //JedisConnectionFactory jedisConnectionFactory(){
-    //    JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-    //    jedisConnectionFactory.setHostName("127.0.0.1");
-    //    jedisConnectionFactory.setPassword("123456");
-    //    return jedisConnectionFactory;
-    //}
+    @Value("${spring.redis.host}")
+    private String host;
+    @Value("${spring.redis.password}")
+    private String password;
+    @Value("${spring.redis.port}")
+    private int port;
+    @Value("${spring.redis.timeout}")
+    private int timeout;
+    @Value("${spring.redis.jedis.pool.max-idle}")
+    private int maxIdle;
+    @Value("${spring.redis.jedis.pool.max-wait}")
+    private long maxWaitMillis;
+
+    /**
+     * 需要注意 JedisPool 默认就是 this((String)"localhost", 6379)
+     */
+    @Bean
+    public JedisPool redisPoolFactory() {
+        Logutil.logger.info("JedisPool init successful，host -> [{}]；port -> [{}]", host, port);
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
+
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
+        return jedisPool;
+    }
 
     @Bean
-    public RedisStandaloneConfiguration configuration(){
+    @Resource(name = "redisStandaloneConfiguration")
+    public JedisConnectionFactory jedisConnectionFactory(RedisStandaloneConfiguration redisStandaloneConfiguration) {
+        JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
+        jedisClientConfiguration.connectTimeout(Duration.ofMillis(1000));
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration,
+                jedisClientConfiguration.build());
+
+        return jedisConnectionFactory;
+    }
+
+    @Bean(name = "redisStandaloneConfiguration")
+    public RedisStandaloneConfiguration configuration() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName("127.0.0.1");
         configuration.setPort(6379);
@@ -81,6 +116,7 @@ public class RedisConfig {
      * 设置数据缓存的时间。
      */
     private Duration timeToLive = Duration.ZERO;
+
     public void setTimeToLive(Duration timeToLive) {
         this.timeToLive = timeToLive;
     }
@@ -103,8 +139,8 @@ public class RedisConfig {
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
                 .disableCachingNullValues();
-                // 可以单独指定缓存 key 的前缀。默认是当前缓存组件的名称。
-                //.prefixKeysWith("");
+        // 可以单独指定缓存 key 的前缀。默认是当前缓存组件的名称。
+        //.prefixKeysWith("");
 
         RedisCacheManager cacheManager = RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(config)
