@@ -4,18 +4,17 @@ import hyman.springbootdemo.dao.UserDao;
 import hyman.springbootdemo.dao.UserDaoAnotation;
 import hyman.springbootdemo.entity.PropSet;
 import hyman.springbootdemo.entity.User;
-import hyman.springbootdemo.util.Logutil;
-import hyman.springbootdemo.util.MybatisResults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 对缓存组件进行统一的设置（公共配置），避免了一个个地设置。
  */
+@Slf4j
 @CacheConfig(cacheNames = "emp")
 @Service
 public class UserServiceImp implements UserService {
@@ -92,7 +91,7 @@ public class UserServiceImp implements UserService {
     @CacheEvict(cacheNames = "emp",key = "#id")
     @Override
     public void delete(Integer id) {
-        Logutil.logger.info("=== 已经删除工人："+id);
+        log.info("=== 已经删除工人："+id);
     }
 
     /**

@@ -2,7 +2,7 @@ package hyman.springbootdemo.controller;
 
 import hyman.springbootdemo.entity.Person;
 import hyman.springbootdemo.service.PersonService;
-import hyman.springbootdemo.util.Logutil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @RestController
 @RequestMapping("/client")
 public class ClientController {
@@ -34,10 +35,10 @@ public class ClientController {
 
     @GetMapping("/getById/{id}")
     public String getById(@PathVariable Integer id) {
-        Logutil.logger.info("=== 用 ID 查询 person："+id);
+        log.info("=== 用 ID 查询 person："+id);
 
         Person person = personService.getById(id);
-        Logutil.logger.info("=== "+person.toString());
+        log.info("=== "+person.toString());
         return "getById";
     }
 
@@ -46,14 +47,14 @@ public class ClientController {
 
     @GetMapping("/insertCache/{id}")
     public String insertCache(@PathVariable Integer id) {
-        Logutil.logger.info("=== 将 ID 人员插入缓存："+id);
+        log.info("=== 将 ID 人员插入缓存："+id);
 
         Person person = new Person("test",20);
         Cache cache = cacheManager.getCache("person");
 
         // cacheManager 会自动将缓存组件名称作为对应的 key 值。所以只需要传入 id 即可。
         cache.put(id,person);
-        Logutil.logger.info("=== "+person.toString());
+        log.info("=== "+person.toString());
         return "insertCache";
     }
 }

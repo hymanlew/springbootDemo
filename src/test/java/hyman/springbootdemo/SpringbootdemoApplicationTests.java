@@ -3,6 +3,7 @@ package hyman.springbootdemo;
 import hyman.springbootdemo.entity.Person;
 import hyman.springbootdemo.entity.User;
 import hyman.springbootdemo.util.Logutil;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * 使用系统自身的测试类，编写一个简单的单元测试来模拟 http 请求。
  */
-
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
@@ -51,7 +52,7 @@ public class SpringbootdemoApplicationTests {
 
     @Test
     public void t1(){
-        Logutil.logger.info(person.toString());
+        log.info(person.toString());
     }
 
     @Resource
@@ -318,7 +319,7 @@ public class SpringbootdemoApplicationTests {
 
         user = new User("jgirl", 30+"");
         myRedisTemplate.opsForValue().set(user.getName(),user);
-        Logutil.logger.info("==== 存储对象成功 ====");
+        log.info("==== 存储对象成功 ====");
     }
 
 
@@ -342,15 +343,15 @@ public class SpringbootdemoApplicationTests {
         map.put("msg","testmsg");
         map.put("msg", Arrays.asList("A",123,true));
         rabbitTemplate.convertAndSend("bootexchange","add",map);
-        Logutil.logger.info("==== 存储对象成功 ====");
+        log.info("==== 存储对象成功 ====");
     }
 
     @Test
     public void test5(){
         Object object = rabbitTemplate.receiveAndConvert("bootqueue");
-        Logutil.logger.info("======"+object.getClass());
-        Logutil.logger.info("======"+object.toString());
-        Logutil.logger.info("==== 存储对象成功 ====");
+        log.info("======"+object.getClass());
+        log.info("======"+object.toString());
+        log.info("==== 存储对象成功 ====");
     }
 
     @Autowired
@@ -365,6 +366,6 @@ public class SpringbootdemoApplicationTests {
 
         // 要绑定到的目标，目标类型，交换器名，routing key，参数map
         amqpAdmin.declareBinding(new Binding("testqueue",Binding.DestinationType.QUEUE,"hymanexchange","test.#",new HashMap<>()));
-        Logutil.logger.info("==== 存储对象成功 ====");
+        log.info("==== 存储对象成功 ====");
     }
 }

@@ -1,6 +1,6 @@
 package hyman.springbootdemo.config;
 
-import hyman.springbootdemo.util.Logutil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * 自定义 AOP 拦截器：
  */
+@Slf4j
 public class MyHandlerInterceptor implements HandlerInterceptor{
 
     @Override
@@ -51,11 +52,11 @@ public class MyHandlerInterceptor implements HandlerInterceptor{
         String name = ((org.springframework.security.core.userdetails.User)user).getUsername();
 
         if("user".equals(name) || "admin".equals(name)){
-            Logutil.logger.info("============ 当前用户："+name+" =============");
+            log.info("============ 当前用户："+name+" =============");
             request.getSession().setAttribute("user",name);
             return true;
         }
-        Logutil.logger.warn("============ 当前为未登录状态！=============");
+        log.warn("============ 当前为未登录状态！=============");
         return false;
     }
 

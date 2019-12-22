@@ -3,6 +3,7 @@ package hyman.springbootdemo.controller;
 import hyman.springbootdemo.entity.User;
 import hyman.springbootdemo.service.UserService;
 import hyman.springbootdemo.util.Logutil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,10 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * select == get
@@ -22,6 +21,7 @@ import java.util.Set;
  * update == put
  * delete == delete
  */
+@Slf4j
 @Controller
 @RequestMapping("/emp")
 public class EmpController {
@@ -47,7 +47,7 @@ public class EmpController {
      */
     @PostMapping("/addEmp")
     public String addEmp(Map<String,Object> map, @Validated User user, BindingResult result){
-        Logutil.logger.info("=== 添加工人："+user.toString());
+        log.info("=== 添加工人："+user.toString());
 
         if(result.hasErrors()){
             Logutil.getValidData(map, result);
@@ -61,7 +61,7 @@ public class EmpController {
 
     @GetMapping("/getById/{id}")
     public String getById(@PathVariable Integer id, Map<String,Object> map) {
-        Logutil.logger.info("=== 用 ID 查询工人："+id);
+        log.info("=== 用 ID 查询工人："+id);
 
         map.put("emp", userService.getById(id));
         return "html/empadd";
@@ -69,7 +69,7 @@ public class EmpController {
 
     @PutMapping("/addEmp")
     public String updateEmp(Map<String,Object> map, @Validated User user, BindingResult result){
-        Logutil.logger.info("=== 修改工人信息："+user.toString());
+        log.info("=== 修改工人信息："+user.toString());
 
         if(result.hasErrors()){
             Logutil.getValidData(map, result);
@@ -85,7 +85,7 @@ public class EmpController {
 
     @DeleteMapping("/delete/{id}")
     public String deleteById(@PathVariable Integer id){
-        Logutil.logger.info("=== 用 ID 删除工人："+id);
+        log.info("=== 用 ID 删除工人："+id);
 
         userService.delete(id);
         return "redirect:/emp/emps";
@@ -96,7 +96,7 @@ public class EmpController {
         List<User> list = userService.selectAndCount(count,size);
         map.put("emps",list.get(0));
         map.put("count",list.get(1));
-        Logutil.logger.info("=== 统计工人："+list.get(1));
+        log.info("=== 统计工人："+list.get(1));
 
             return "html/emplist";
     }

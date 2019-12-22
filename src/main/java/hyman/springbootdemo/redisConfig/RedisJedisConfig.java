@@ -1,9 +1,9 @@
 //package hyman.springbootdemo.redisConfig;
 //
+//import lombok.extern.slf4j.Slf4j;
 //import com.fasterxml.jackson.annotation.JsonAutoDetect;
 //import com.fasterxml.jackson.annotation.PropertyAccessor;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import hyman.springbootdemo.util.Logutil;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -41,6 +41,7 @@
 // * Jedis 是 Redis官方推荐的面向 Java的操作 Redis的客户端，而 RedisTemplate是 SpringDataRedis 中对 JedisApi 的高度封装。
 // * springDataRedis 相对于 Jedis 来说可以方便地更换 Redis的 Java客户端，比 Jedis多了自动管理连接池的特性，方便与其他Spring框架进行搭配使用。如：SpringCache
 // */
+//@Slf4j
 //@Configuration
 //@EnableCaching
 //public class RedisJedisConfig {
@@ -52,7 +53,7 @@
 //    @Bean
 //    public CacheManager cacheManager() {
 //        // 初始化缓存管理器，在这里我们可以缓存的整体过期时间什么的，我这里默认没有配置
-//        Logutil.logger.info("初始化 -> [{}]", "CacheManager RedisCacheManager Start");
+//        log.info("初始化 -> [{}]", "CacheManager RedisCacheManager Start");
 //        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager
 //                .RedisCacheManagerBuilder
 //                .fromConnectionFactory(jedisConnectionFactory);
@@ -83,26 +84,26 @@
 //    @Bean
 //    public CacheErrorHandler errorHandler() {
 //        // 异常处理，当Redis发生异常时，打印日志，但是程序正常走
-//        Logutil.logger.info("初始化 -> [{}]", "Redis CacheErrorHandler");
+//        log.info("初始化 -> [{}]", "Redis CacheErrorHandler");
 //        CacheErrorHandler cacheErrorHandler = new CacheErrorHandler() {
 //            @Override
 //            public void handleCacheGetError(RuntimeException e, Cache cache, Object key) {
-//                Logutil.logger.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
+//                log.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
 //            }
 //
 //            @Override
 //            public void handleCachePutError(RuntimeException e, Cache cache, Object key, Object value) {
-//                Logutil.logger.error("Redis occur handleCachePutError：key -> [{}]；value -> [{}]", key, value, e);
+//                log.error("Redis occur handleCachePutError：key -> [{}]；value -> [{}]", key, value, e);
 //            }
 //
 //            @Override
 //            public void handleCacheEvictError(RuntimeException e, Cache cache, Object key)    {
-//                Logutil.logger.error("Redis occur handleCacheEvictError：key -> [{}]", key, e);
+//                log.error("Redis occur handleCacheEvictError：key -> [{}]", key, e);
 //            }
 //
 //            @Override
 //            public void handleCacheClearError(RuntimeException e, Cache cache) {
-//                Logutil.logger.error("Redis occur handleCacheClearError：", e);
+//                log.error("Redis occur handleCacheClearError：", e);
 //            }
 //        };
 //        return cacheErrorHandler;

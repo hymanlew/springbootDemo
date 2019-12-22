@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hyman.springbootdemo.entity.User;
-import hyman.springbootdemo.util.Logutil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -34,6 +34,7 @@ import java.time.Duration;
 /**
  * @EnableCaching，必须加，使配置生效
  */
+@Slf4j
 @Configuration
 @EnableCaching
 @Component
@@ -59,7 +60,7 @@ public class RedisConfig {
      */
     @Bean
     public JedisPool redisPoolFactory() {
-        Logutil.logger.info("JedisPool init successful，host -> [{}]；port -> [{}]", host, port);
+        log.info("JedisPool init successful，host -> [{}]；port -> [{}]", host, port);
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);
         jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
