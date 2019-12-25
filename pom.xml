@@ -193,7 +193,10 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- 配置文件处理器，将 POJO 中所有属性和配置文件中相关的配置进行绑定 -->
+		<!--
+			配置文件处理器，将 POJO 中所有属性和配置文件中相关的配置进行绑定。
+			配合 @ConfigurationProperties 编译生成元数据文件(IDEA编辑器的属性提示)
+		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
