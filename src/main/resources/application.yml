@@ -42,6 +42,15 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
+# Druid监控设置
+  druid:
+    #web-stat-filter.exclusions: *.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*
+    stat-view-pa.url-pattern: /druid/*
+    stat-view-servlet.reset-enable: true
+    stat-view-servlet.login-username: admin
+    stat-view-servlet.login-password: admin
+    aop-patterns: com.example.atomikos.service.*
+
   http:
     encoding:
       charset: utf-8

@@ -79,7 +79,9 @@ mybatis:
   config-location: classpath:mybatis-config.xml
   # 指定sql映射文件位置
   mapper-locations: classpath:mapper/*.xml
-
+  # 开启下划线
+  configuration:
+    map-underscore-to-camel-case: true
 
 # 使用监控功能，端口号加上 /monitor 才能访问相应的端点（默认是 /actuator），并且也只能访问添加过的端点
 management:
