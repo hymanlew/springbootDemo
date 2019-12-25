@@ -2,7 +2,6 @@ package hyman.springbootdemo;
 
 import hyman.springbootdemo.entity.Person;
 import hyman.springbootdemo.entity.User;
-import hyman.springbootdemo.util.Logutil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Before;
