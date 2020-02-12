@@ -1,6 +1,7 @@
 package hyman.springbootdemo.config;
 
 import hyman.springbootdemo.util.ServerException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ import java.util.Map;
  * exception.getMessage()，          方法返回 Exception的详细消息字符串。
  */
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

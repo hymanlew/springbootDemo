@@ -30,7 +30,7 @@ import java.sql.SQLException;
  * Lettuce 使用过程中的“坑”：堆内存溢出和堆外内存溢出。
  *
  */
-public class RedisTest {
+public class LettuceTest {
 
     @Test
     public void simple() {
