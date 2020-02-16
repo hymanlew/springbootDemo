@@ -69,6 +69,14 @@ public class RedisConfig {
         return jedisPool;
     }
 
+    // 该方法只能用于本地使用（即 localhost），因为其 JedisPool 默认就是 this((String)"localhost", 6379)
+    //@Bean
+    //JedisConnectionFactory jedisConnectionFactory(){
+    //    JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+    //    //jedisConnectionFactory.setPassword("123456");
+    //    return jedisConnectionFactory;
+    //}
+
     @Bean
     @Resource(name = "redisStandaloneConfiguration")
     public JedisConnectionFactory jedisConnectionFactory(RedisStandaloneConfiguration redisStandaloneConfiguration) {
