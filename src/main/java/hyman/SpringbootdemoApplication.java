@@ -1,17 +1,26 @@
 package hyman;
 
+import com.sun.istack.internal.Interned;
+import hyman.springbootdemo.demo.ConfigAutoImport;
+import hyman.springbootdemo.demo.ConfigClass;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.ImportSelector;
+import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.lang.annotation.*;
 import java.util.Locale;
 
 
@@ -24,12 +33,15 @@ import java.util.Locale;
  * 		@Configuration 配置类上标注这个注解；即是将 spring 中的配置文件声明为配置类。配置类也就是容器中的一个组件，即@Component。
  *
  * @EnableAutoConfiguration 开启自动配置功能，这样自动配置才能生效，正常启动。
- * 		@AutoConfigurationPackage 自动配置包。
- * 			@Import(AutoConfigurationPackages.Registrar.class) Spring的底层注解@Import，给容器中导入一个组件；导入的组件由括号
- * 			内指定的	.class 类将主配置类（@SpringBootApplication标注的类）的所在包及下面所有子包里面的所有组件扫描到Spring容器。
+ * 		@AutoConfigurationPackage 自动配置包 = @Import(AutoConfigurationPackages.Registrar.class)。
  *
- * 		    @Import(EnableAutoConfigurationImportSelector.class) 将所有需要导入的组件以全类名的方式返回；这些组件就会被添加到容器中；
- * 		    会给容器中导入非常多的自动配置类（xxxAutoConfiguration）；就是给容器中导入这个场景需要的所有组件，并配置好这些组件；
+ * 		 @Import() 它是 Spring 的底层注解，是给容器中导入一个组件；导入的组件由括号内指定的	.class 类将主配置类（@SpringBootApplication
+ * 		 标注的类）的所在包及下面所有子包里面的所有组件扫描到Spring容器。
+ *
+ * 		 @Import(AutoConfigurationImportSelector.class) 括号中的类实现了 importSelector 接口，且该接口只有一个 selectImports 抽象方法，
+ * 		 它是将所有需要导入的组件以全类名的方式返回（返回一个 string 数组，这个数组中指定了需要装配到 IOC 容器的类），会给容器中导入非常多
+ * 		 的自动配置类（xxxAutoConfiguration）；当在 @Import 中导入一个 importSelector 实现类之后，就会把该实现类中返回的 class 名称对应
+ * 		 的类都装载到 IOC 容器中；就是给容器中导入这个场景需要的所有组件，并配置好这些组件；
  *
  * 有了自动配置类，免去了我们手动编写配置注入功能组件等的工作。Spring Boot在启动的时候从类路径下的META-INF/spring.factories中获取
  * EnableAutoConfiguration指定的值，将这些值作为自动配置类导入到容器中，自动配置类就生效，帮我们进行自动配置工作；以前我们需要自己
@@ -63,14 +75,20 @@ import java.util.Locale;
 //@ImportResource(locations = {"classpath:beans.xml"})
 @MapperScan(basePackages = "hyman.springbootdemo.dao")
 @SpringBootApplication
+
 //@EnableCaching
 //@EnableRabbit
 @EnableTransactionManagement
 @EnableRedisRepositories
+
+//自定义的批量自动装配
+@ConfigAutoImport
 public class SpringbootdemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootdemoApplication.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(SpringbootdemoApplication.class, args);
+		ConfigClass config = context.getBean(ConfigClass.class);
+		System.out.println(config.getClass());
 	}
 
 }
